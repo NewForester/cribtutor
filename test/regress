@@ -1,0 +1,97 @@
+#!/bin/bash --posix
+##
+##  Goal:       Run regression testcases on the cribtutor program.
+##
+##  Use:        regress [testcase ...]
+##
+##  where       testcase ... names one or more cribtutor testcases to run
+##              if none are given, run all cribtutor testcases
+##
+##  Flags:      -b (passed to diff) - ignore white space differences
+##
+##  All cribtutor testcases are listed in cribtutor.txt.
+##  Initial letters are sufficient when naming testcases.
+##
+##  Note that:
+##      testcase.html is the testcase cribsheet
+##      testcase.ref is the reference file against which output is compared
+##      testcase.inp is the 'responses' that drive the testcase when required
+##
+##  No output means the testcase(s) ran successfully.
+##
+
+#------------------------------------------------------------------------------#
+#
+# This script run regression tests for the
+#   https://github.com/NewForester/cribtutor project
+#   Copyright (C) 2016, NewForester
+#   Released under the terms of the GNU GPL v2
+#
+#------------------------------------------------------------------------------#
+
+# print out the header comment
+
+usage() { (sed -e "/^###/d" -e "/^##/!d" $0 && echo -e "\e[35m${0##*/}: \e[31m$@\e[0m") >&2; }
+
+# process options
+
+while [[ "${1:0:1}" == "-" ]]; do
+    case $1 in
+      (-b)
+        dflags+="$1 "; shift;
+        ;;
+      (--help)
+        usage "I hope that was helpful.";
+        exit 1;
+        ;;
+      (*)
+        usage "bad option \"$1\".";
+        exit 1;
+        ;;
+    esac
+done
+
+# change directory for convenience
+
+if [[ -n "${0%/*}" ]]; then
+    cd "${0%/*}" > /dev/null;
+fi
+
+# now the executable path is known
+
+cribtutor=../cribtutor;
+
+# function to run a test and compare the results with a reference file
+
+function runTest ()
+{
+    test=$1; shift;
+
+    if [[ "${test%-p}" != "${test}" ]]; then
+        "${cribtutor}" -t -s "${test}" -p | diff ${dflags} - "${test}.ref";
+    else
+        "${cribtutor}" -t -s "${test}" < "${test}.inp" | diff ${dflags} - "${test}.ref";
+    fi
+}
+
+# what about parameters ?
+
+if [[ $# -ne 0 ]]; then
+    # run the regression tests given as parameters
+
+    for test; do
+        for file in "${test}"*.html; do
+            runTest "${file%.html}";
+        done
+    done
+else
+    # run all regression tests
+
+    for file in $(cat cribsheets.txt); do
+        runTest "${file%.html}";
+    done
+fi
+
+exit;
+
+# EOF

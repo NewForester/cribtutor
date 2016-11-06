@@ -1,0 +1,17 @@
+Basic test of the HTML parser - Headers
+
+A Level 1 Header
+
+... looks just like a paragraph.
+
+A Level 2 Header
+
+... likewise.
+
+A Level 3 Header
+
+... is more of the same.
+
+A Header Ruler
+
+... produces no output.

@@ -1,0 +1,45 @@
+Simple test of paragraph shuffling.
+
+
+A Section with Shuffled Paragraphs
+    Skip [yNq] ? 
+Paragraph 1
+
+Paragraph 3
+
+Paragraph 2
+
+
+A Section without Shuffled Paragraphs
+    Skip [yNq] ? 
+Paragraph 1
+
+Paragraph 2
+
+Paragraph 3
+
+
+A More Complex Section
+    Skip [yNq] ? 
+Paragraph 1 not shuffled
+
+Paragraph 2
+
+Paragraph 4
+
+Paragraph 3
+
+Paragraph 5
+
+Paragraph 6 not shuffled
+
+Paragraph 7
+
+Paragraph 9
+
+Paragraph 8
+
+Paragraph 10
+
+What's done is ____
+Fill in the blanks: 

@@ -1,0 +1,52 @@
+Basic test of the HTML parser - Paragraphs and Comments
+
+There is a blank line between paragraphs - always.
+
+Paragraphs may begin and end anywhere on a source line.
+
+There may not be a gap in the source ...
+
+... between succesive paragraphs.
+
+Nightmare >
+
+A empty paragraph produces a second empty line.
+
+
+Text before
+
+a paragraph and
+
+text after. 
+
+No comment.
+
+No comment.
+
+No comment.
+
+No comment.
+
+Nocomment.
+
+Comments are ignored.
+
+Comments are ignored. 
+
+Comments are ignored. 
+
+Comments are ignored. 
+
+Comments are ignored. 
+
+A comment. Between sentences.
+
+ByeBye
+
+ByeBye
+
+ByeBye
+
+ByeBye
+
+Bye Bye

@@ -1,0 +1,47 @@
+Simple test of order list shuffling.
+
+
+A Ordered List with Shuffled Items
+    Skip [yNq] ? 
+Some ____ the list. 
+
+  five
+  four
+  two
+  three
+  one
+
+Some text ____ the list.
+Fill in the blanks:  >> before,; after,;
+
+
+A Ordered List with Shuffled Items
+    Repeat [yNq] ? 
+Some ____ the list. 
+
+  three
+  two
+  four
+  five
+  one
+
+Some text ____ the list.
+Fill in the blanks:  >> before,; after,;
+
+
+A Ordered List with Shuffled Items
+    Repeat [yNq] ? 
+Some ____ the list. 
+
+  two
+  four
+  five
+  three
+  one
+
+Some text ____ the list.
+Fill in the blanks:  >> before,; after,;
+
+
+A Ordered List with Shuffled Items
+    Repeat [yNq] ? 

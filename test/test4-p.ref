@@ -1,0 +1,37 @@
+Simple Test of Code block formatting
+
+There may be text before: 
+
+    int main (int argc, char *argv[])
+    {
+        return (0);
+    }
+
+and text after.
+
+Again with only text before.
+
+There may be text before: 
+
+    int main (int argc, char *argv[])
+    {
+        return (0);
+    }
+
+Again with only text after.
+
+    int main (int argc, char *argv[])
+    {
+        return (0);
+    }
+
+There may be text after.
+
+Again with no extra text.
+
+    int main (int argc, char *argv[])
+    {
+        return (0);
+    }
+
+Done

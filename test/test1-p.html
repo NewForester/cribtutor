@@ -1,0 +1,103 @@
+<!--
+One of a set of regression test files for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<p> Basic test of the HTML parser - Paragraphs and Comments </p>
+
+<p>There is a blank line between paragraphs - always.</p>
+
+      <p>
+Paragraphs may begin and end anywhere on a source line.
+      </p>
+
+<p>There may not be a gap in the source ...</p><p>... between succesive paragraphs.</p>
+
+<p>
+Nightmare
+></p>
+
+<p>
+A empty paragraph produces a second empty line.
+</p><p     />
+
+
+
+Text before<p>a paragraph and</p>text after.
+
+
+<p>
+No comment.
+</p>
+<p>
+No <!-- --> comment.
+</p>
+<p>
+No <!-- -->comment.
+</p>
+<p>
+No<!-- --> comment.
+</p>
+<p>
+No<!-- -->comment.
+</p>
+
+
+<p>
+Comments are ignored.
+</p>
+
+<p>
+<!--A comment-->
+
+Comments are ignored.
+
+<!--A comment-->
+</p>
+
+<p>
+<!--A comment-->
+Comments are ignored.
+<!--A comment-->
+</p>
+
+<p>
+<!--A comment-->
+
+Comments are ignored.
+<!--A comment-->
+</p>
+
+<p>
+<!--A comment-->
+Comments are ignored.
+
+<!--A comment-->
+</p>
+
+
+
+<!-- Comments may comment out other elements
+<h1>
+You will not see me.
+</h1>
+-->
+
+<p>
+A comment.
+<!--
+The comment should be converted to a space
+-->
+Between sentences.
+</p>
+
+
+<p>ByeBye</p>
+<p>Bye<!-- Bye bye--><em>Bye</em></p>
+<p><em>Bye</em><!-- Bye bye-->Bye</p>
+<p><em>Bye</em><!-- Bye bye--><em>Bye</em></p>
+<p><em>Bye</em> <!-- Bye bye--> <em>Bye</em></p>
+
+<!-- EOF -->

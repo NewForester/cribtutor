@@ -1,0 +1,27 @@
+Basic test of the HTML parser - Inline elements and Line break
+
+Text in a paragraph is collected together into a sentence.
+
+Runs of spaces are squeezed out.
+
+There should be no leading or trailing spaces.
+
+The presence of mark up in paragraphs should not mess up the appearance.
+
+Even mark up not handled by the program.
+
+No ...mark up... should add white space that is not there.
+
+A more tricky example. Hello Paul !
+
+Beware a source line break after mark up at the end of a line.
+
+The break ...
+... should force a new line.
+
+As I said break ...
+... should force a new line.
+
+Two force the output ...
+
+... of an empty line.

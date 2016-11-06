@@ -1,0 +1,47 @@
+<!--
+One of a set of regression test files for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<h1> Basic test of the HTML parser - Inline elements and Line break </h1>
+
+<p>Text
+    in a
+paragraph is
+    collected together
+into a sentence.
+</p>
+
+<p>Runs of     spaces    are squeezed out.</p>
+
+<p>    There should be no leading or trailing spaces.   </p>
+
+<p>The presence of <em>mark up</em> in paragraphs should not mess up the appearance.</p>
+
+<p>Even <i>mark up</i> not handled by the program.</p>
+
+<p>No ...<em>mark up</em>... should add white space that is not there.</p>
+
+<p>
+A more tricky example. <i><em>Hello</em> Paul</i> !
+</p>
+
+<p>Beware a source line break after <i><em>mark up</em></i>
+at the end of a line.</p>
+
+<p>
+The break ...<br>... should force a new line.
+</p>
+
+<p>
+As I said break ...<br />... should force a new line.
+</p>
+
+<p>
+Two force the output ...<br><br />
+... of an empty line.
+</p>
+
+<!-- EOF -->

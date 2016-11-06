@@ -1,0 +1,21 @@
+#
+# The list of 'test' crib sheets for the
+#    https://github.com/NewForester/cribtutor project
+#    Copyright (C) 2016, NewForester
+#    Released under the terms of the GNU GPL v2
+#
+
+test1-p.html
+test2-p.html
+test3-p.html
+test4-p.html
+test5-p.html
+
+1_test.html
+23_test.html
+
+blanks.html
+spelling.html
+choice.html
+shuffle.html
+list-shuffle.html

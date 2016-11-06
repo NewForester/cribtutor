@@ -1,0 +1,51 @@
+Ordered lists have similar problems to Code blocks.
+
+There may be text before: 
+
+1 < (less than)
+2 > (greater than)
+3 & (ampersand)
+4 ' (apostrophe) and
+5 " (quotes).
+
+and text after.
+
+Again with only text before.
+
+There may be text before: 
+
+  < (less than)
+  > (greater than)
+  & (ampersand)
+  ' (apostrophe) and
+  " (quotes).
+
+Again with only text after.
+
+  < (less than)
+  > (greater than)
+  & (ampersand)
+  ' (apostrophe) and
+  " (quotes).
+
+There may be text after.
+
+Again with no extra text.
+
+  < (less than).
+
+  > (greater than).
+
+  & (ampersand).
+
+  ' (apostrophe).
+
+  " (quotes).
+
+Unordered lists are easier.
+
+Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.
+
+The days of the week are: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday makes seven.
+
+Done
