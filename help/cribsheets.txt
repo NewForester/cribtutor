@@ -1,0 +1,10 @@
+#
+# The list of 'help' crib sheets for the
+#    https://github.com/NewForester/cribtutor project
+#    Copyright (C) 2016, NewForester
+#    Released under the terms of the GNU GPL v2
+#
+
+options.html
+
+# EOF
