@@ -87,7 +87,7 @@ if [[ $# -ne 0 ]]; then
 else
     # run all regression tests
 
-    for file in $(cat cribsheets.txt); do
+    for file in $(sed -e 's/#.*//' cribsheets.txt); do
         runTest "${file%.html}";
     done
 fi
