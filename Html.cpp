@@ -64,7 +64,7 @@ namespace       Html
     static  Element*    newElement (ifstream& input, const Element& parent, const string &tag, string& content);
     static  void    addSubelement (ifstream& input, Element& parent, Element& element, string& content, const bool htmlBlockElement);
 
-    // Helper routines with a single call site in parseElement()
+    // helper routines with a single call site in parseElement()
 
     inline  bool    unexpectedCloseTag  (const string &tag, string& content);
     inline  bool    unexpectedNestedTag (const string &tag, const string &previous, string& content);
@@ -77,7 +77,7 @@ namespace       Html
     static  void    tidyContent (string& content, const string &tag, const bool startOfElement, const bool endOfElement);
     static  void    checkForPairedTerms (Element &element);
 
-    // Helper routines with a single call site in newElement() or addSubelement()
+    // helper routines with a single call site in newElement() or addSubelement()
 
     inline  bool    startOfSentence (const Element& parent, const string& content);
     inline  bool    extraNewLine (const Element& parent, const Element &element);
@@ -97,6 +97,10 @@ namespace       Html
     {
         return (printElement (stream, element), stream);
     }
+
+    // heuristic to determine if an element ends with text that ends a sentence
+
+    inline  bool    endsWithFullStop (const Element& element);
 
     // for debug of printElement() only
 
@@ -661,18 +665,8 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
                     stream << "\n";
 
                     if (element.tag == Markup::olst && subElement.tag == Markup::item)
-                        if (!subElement.contents.empty())
-                        {
-                            const string &  text = subElement.contents.back().text;
-
-                            for (size_t pos = text.length() - 1; pos >= 0; --pos)
-                            {
-                                if (text[pos] == '.')
-                                    stream << "\n";
-                                if (text[pos] != ' ')
-                                    break;
-                            }
-                        }
+                        if (endsWithFullStop(subElement))
+                            stream << "\n";
                 }
             }
 
@@ -692,6 +686,30 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
 
         stream << endl << indent.substr(2) << endTag << endl;
     }
+}
+
+//----  Heuristic to determine if an element ends with text that ends a sentence
+
+bool    Html::endsWithFullStop (const Element& element)
+{
+    if (!element.contents.empty())
+    {
+        const string &  text = element.contents.back().text;
+
+        for (size_t pos = text.length() - 1; pos >= 0; --pos)
+        {
+            // only one full stop ... ellipsis don't count
+
+            if (text[pos] == '.')
+                if (pos == 0 || text[pos -1] != '.')
+                    return (true);
+
+            if (text[pos] != ' ')
+                break;
+        }
+    }
+
+    return (false);
 }
 
 //----------------------------------------------------------------------------//
