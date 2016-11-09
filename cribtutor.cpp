@@ -40,11 +40,11 @@ using namespace std;
 
 //----  program parameters
 
-int     choices = 2;
-bool    runQuiz = true;
-string  cribSheetDirectory (".");
-string  cribSheets ("cribsheets.txt");
-string  beginsWith;
+static  int     choices = 2;
+static  bool    runQuiz = true;
+static  string  cribSheetDirectory (".");
+static  string  cribSheets ("cribsheets.txt");
+static  string  beginsWith;
 
 //----  forward declarations - first level routines
 
@@ -84,7 +84,7 @@ int     main (int argc, char* argv[])
 
     // process the list of crib sheets
 
-    bool    fastforward = !beginsWith.empty();
+    bool    fastForward = !beginsWith.empty();
 
     do
     {
@@ -96,17 +96,20 @@ int     main (int argc, char* argv[])
 
         // fast forward to the first crib sheet whose name begins with beginsWith
 
-        if (fastforward)
-            fastforward = (file(pathName).compare(0, beginsWith.size(), beginsWith) != 0);
+        if (fastForward)
+            fastForward = (file(pathName).compare(0, beginsWith.size(), beginsWith) != 0);
 
-        // process crib sheets one by obe
+        // process crib sheets one by one
 
-        if (!fastforward)
+        if (!fastForward)
             cribSheetQuiz(cribSheetDirectory + pathName, choices);
-    }
-    while (sheets && (fastforward || runQuiz));
 
-    if (fastforward)
+        if (!runQuiz && !fastForward)
+            break;
+    }
+    while (sheets);
+
+    if (fastForward)
     {
         cerr << "Skip to: '" << beginsWith << "' not found" << endl;
         return (1);
