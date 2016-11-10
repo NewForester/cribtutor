@@ -1,0 +1,347 @@
+<!--
+An example crib sheet for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<h1> C++ Templates </h1>
+
+<h2> Introduction </h2>
+
+<p>
+Templates are a very powerful feature of C++.
+</p>
+
+<p>
+Templates extend the <em>function</em> and <em>class</em> concepts by providing a means to <em>parametrise</em> them.
+Templates are declared in terms of &quot;any type&quot; and so support <em>generic</em> programming.
+</p><p>
+The compiler will <em>instantiate</em> type specific instances of templates as needed.
+This allows logic and algorithms to be written <em>once</em> and then used with many different <em>types</em>.
+</p><p>
+When compared with the alternative of <em>overloading</em> by copy/paste,
+testing effort and maintenance has near &apos;<em>constant</em>&apos; cost instead of at least &apos;<em>linear</em>&apos; cost.
+</p>
+
+<p>
+Templates can be recognised by the use of <em>brackets</em> (&lt;&gt;).
+For the novice, templates are difficult to read.
+Start simple: do not try to read STL or Boost source code.
+</p>
+
+<p>
+There are three types of template:
+<ul>
+<li><em>function</em>,</li>
+<li><em>class</em> and</li>
+<li><em>method</em></li>
+</ul>
+but conceptually these are the same.
+</p><p>
+Template <em>specialisation</em> may be necessary when instantiation fails
+or be advisable for performance reasons.
+</p>
+
+<p>
+C++ is a <em>strongly</em> typed language but the compiler cannot do type checking on template <em>definitions</em>:
+it can only do type checking on template <em>instantiations</em>.
+</p><p>
+The extern keyword cannot be used with templates.
+Each compilation unit must have the <em>declaration</em> and <em>definition</em> of each template it needs.
+This usually means both appear in a <em>header</em> file.
+</p><p>
+The declaration and definition of a template specialisation must also be available to each compilation unit that requires it.
+This does not require them to appear in the same <em>header</em> file as the template itself.
+</p>
+
+
+<h2> Function Templates </h2>
+
+<p>
+Consider a simple, ordinary, function
+<pre>
+    int add(int a, int b)
+    {
+        return (a+b);
+    }
+</pre>
+called with &apos;double&apos; parameters:  the result will, in general, not be correct.
+</p><p>
+It is possible to <em>overload</em> the function with a second identical to the first except its declaration.
+However, as the number of overloaded implementations of the same <em>function</em> with different parameter <em>types</em> increases
+this approach becomes tedious (especially for long routines).
+</p><p>
+A function <em>template</em> representation with a type parameter allows the logic to be written <em>once</em> for many types:
+<pre>
+    template &lt;typename T&gt;
+    T add(T a, T b)
+    {
+        return (a+b);
+    }
+</pre>
+</p><p>
+Note:
+<ol>
+<!-- Shuffle List -->
+<li>the template <em>keyword</em> and the brackets are required</li>
+<li>the template <em>parameters</em> (there may be more than one) appear between the brackets</li>
+<li>the <em>typename</em>/<em>class</em> keyword identifies a type parameter</li>
+<li>type parameter names are <em>identifiers</em> but are often T, U, ...</li>
+</ol>
+</p>
+
+<p>
+Type parameters are used as <em>place-holders</em> and may appear wherever an <em>ordinary</em> type might appear.
+In the example, T is used to define the function&apos;s parameter types.
+</p><p>
+Function template parameters may be <em>non-type</em> parameters but they <em>cannot</em> have default values:
+<pre>
+    template &lt;typename T, int b&gt;
+    T addInt(T a)
+    {
+        return (a+b);
+    }
+</pre>
+</p><p>
+Function template <em>parameters</em> are often <em>class</em> templates:
+<pre>
+    template &lt;class T&gt;
+    bool insert (Array&lt;T&gt;&amp; array, const T&amp; element, int pos) { /* ... */ }
+</pre>
+</p>
+
+<p>
+Since the compiler can only do <em>type checking</em> on template instantiations
+it is not possible to be certain in advance which type/class instantiations will compile and which will not.
+</p><p>
+The example above requires <em>operator+</em>:
+instantiation will fail at compile time for any class T that does not implement this operator.
+</p><p>
+When instantiation fails because a <em>user-defined</em> type lacks an operator or a method, seek to <em>implement</em> it.
+This approach it is not always an option: the source code may not be available.
+</p><p>
+When this approach is not possible, seek to implement a suitable type specific template <em>specialisation</em>.
+</p>
+
+<p>
+For example:
+<pre>
+    struct Point { int x,y; };
+
+    template &lt;&gt;
+    Point add(Point a, const Point&amp; b)
+    {
+        a.x += b.x;
+        a.y += b.y;
+        return (a);
+    }
+</pre>
+defines a <em>specialisation</em> of the function template &apos;add&lt;&gt;()&apos;
+for the type &apos;Point&apos;.
+</p><p>
+Replace the <em>place-holder</em> (&apos;T&apos;) with the actual type (&apos;Point&apos;) in the function
+and remove the parameter, but not the <em>brackets</em>, from the template declaration.
+</p>
+
+<p>
+An <em>ordinary</em> function will overload a function template specialisation, which will overload the function template
+but only for an <em>exact</em> type match:
+the function <em>template</em> is preferred over integer promotion and other implicit type conversion.
+</p><p>
+Instantiation can be explicit and then arguments are subject to implicit type conversion:
+<pre>
+    template &lt;typename T&gt;
+     T f(T value) { ... }
+
+    double  jepardy;
+
+    float   jetsom = f&lt;float&gt;(jepardy);
+</pre>
+</p><p>
+For function templates with more than one template parameter,
+<em>partial</em> specialisation (of just one parameter for example) is <em>not</em> allowed.
+What may appear to be partial specialisation of a function template is
+most probably one function template overloading another.
+</p>
+
+
+<h2> Class Templates </h2>
+
+<p>
+Class templates are even more powerful than function templates.
+They underpin the whole STL and the Boost extensions.
+</p><p>
+Consider the simple, ordinary, <em>class</em> definition:
+<pre>
+    class Array
+    {
+        int * _array;
+        unsigned int _size;
+
+    public:
+        Array (unsigned size = 0);
+        virtual ~Array();
+
+        void addValue (int value);
+        void delItem  (unsigned index);
+
+        unsigned int getSize() const;
+
+        int&amp; operator[](unsigned index);
+    };
+</pre>
+</p><p>
+This can be turned into a <em>generic</em> class template definition:
+<pre>
+    template &lt;class T&gt;
+    class Array
+    {
+        T * _array;
+        unsigned int _size;
+
+    public:
+        Array (unsigned size = 0);
+        virtual ~Array();
+
+        void addValue (T value);
+        void delItem  (unsigned index);
+
+        unsigned int getSize() const;
+
+        T&amp; operator[](unsigned index);
+    };
+</pre>
+</p><p>
+The template type preamble is required for the <em>class</em> definition and <em>class method</em> definitions outside the class definition.
+</p><p>
+Type parameters replace ordinary types, as appropriate, in
+<ol>
+<!-- Shuffle List -->
+<li>declarations of class <em>data</em> members, including static ones</li>
+<li>declarations of method <em>parameters</em> and <em>return</em> types</li>
+<li>declarations of <em>variables</em> in methods, including static ones</li>
+<li>invocations of operator <em>new</em> and so on</li>
+</ol>
+</p><p>
+The <em>template</em> type replaces the <em>class</em> type (but method names do not change):
+<pre>
+    Array::~Array() { /* ... */ }
+</pre>
+becomes:
+<pre>
+    Array&lt;T&gt;::~Array() { /* ... */ }
+</pre>
+
+</p><p>
+A template type <em>instantiation</em> replaces the class type in <em>variable</em> declarations:
+<pre>
+    Array       array;
+</pre>
+becomes:
+<pre>
+    Array&lt;int&gt;  array;
+</pre>
+
+</p><p>
+Class template parameters may be <em>non-type</em> parameters.  They may also have <em>default</em> values:
+<pre>
+    template &lt;class T = int, int size = 100&gt;
+</pre>
+</p><p>
+Class templates  may have <em>friend</em> functions and classes and these may be templates.
+They may also have <em>static</em> data members.
+These are <em>shared</em> by all objects of the same instantiation.
+</p><p>
+Class templates, unlike ordinary classes, cannot be <em>nested</em> within functions or other classes.
+They can be <em>derived</em> from class templates and ordinary classes and vice versa.
+When an ordinary class inherits from a class template, all template type parameters must be <em>resolved</em>.
+<pre>
+    class A { /* ... */ };
+
+    template &lt;class T&gt; class B : class A { /* ... */ };
+
+    template &lt;class T&gt; class C : class B&lt;T&gt; { /* ... */ };
+
+    class D : public C&lt;int&gt; { /* ... */ };
+</pre>
+
+</p><p>
+Specialisation of an <em>entire</em> class template is possible.
+For example:
+<pre>
+   template &lt;&gt;
+   class Array&lt;char *&gt;{ /* ... */ };
+</pre>
+might define the <em>specialisation</em>
+of the class template &apos;Array&lt;&gt;&apos;
+for the type &apos;char *&apos;.
+</p><p>
+Specialisation of a single <em>method</em> of a class template is also possible.
+For example:
+<pre>
+   template &lt;&gt;
+   std::string Array&lt;Point&gt;::printArray() const { /* ... */ }
+</pre>
+might define the <em>specialisation</em>
+of the method &apos;printArray()&apos; of the class template &apos;Array&lt;&gt;&apos;
+for the type &apos;Point&apos;.
+</p>
+
+<p>
+For class templates with more than one template parameter,
+<em>partial</em> specialisation (of just one parameter for example) is allowed.
+</p>
+
+<p>
+It is recommended steps are taken to verify that the specialisation is actually used when it should be.  Consider:
+<pre>
+    template &lt;typename T&gt;
+    class Pocket {
+        T        value;
+    public:
+        void add (T rhs) { value += rhs; }
+    };
+</pre>
+The specialisation:
+<pre>
+    template &lt;&gt; void Pocket&lt;string&gt;::add(string rhs){value.insert(0, rhs);}
+</pre>
+compiles and is used but the parameter is passed by value.
+While:
+<pre>
+    template &lt;&gt; void Pocket&lt;string &amp;&gt;::add(string &amp; rhs){value.insert(0, rhs);}
+</pre>
+compiles but is not used.
+</p>
+
+<h2> Method Templates </h2>
+
+<p>
+Consider a class, not necessarily a class template, in which a method overloads the same logic/algorithm again and again for different types.
+</p><p>
+The overloading can be avoided by implementing a <em>method</em> template within the class.
+</p><p>
+<pre>
+template &lt;class T&gt;
+class Array
+{
+    /* ... */
+
+    public:
+        template &lt;class U&gt;
+        void convertTo(Array&lt;U&gt;&amp; dest);
+};
+</pre>
+declares a <em>method</em> template within a <em>class</em> template.
+</p><p>
+<pre>
+template &lt;class T&gt;      // class template
+template &lt;class U&gt;      // method template
+void Array&lt;T&gt;::convertTo(Array&lt;U&gt;&amp; dest)
+{
+    /* ... */
+}
+</pre>
+defines the <em>method template</em>.
+</p>

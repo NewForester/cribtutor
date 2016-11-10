@@ -1,0 +1,10 @@
+#
+# An example crib sheet list for the
+#    https://github.com/NewForester/cribtutor project
+#    Copyright (C) 2016, NewForester
+#    Released under the terms of the GNU GPL v2
+#
+
+templates.html
+
+# EOF
