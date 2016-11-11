@@ -1,0 +1,79 @@
+<!--
+One of a set of help files for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<h1> For a description of the command line options in simple English just hit return </h1>
+
+<p>
+In principle, &apos;-d &lt;dir&gt;&apos; is the only option needed to run a quiz.
+</p>
+
+<p>
+The cribtutor program generates a quiz based on the contents of a list of crib sheets.
+</p>
+
+<p>
+By default, the crib sheets are listed in a file named &apos;cribsheet.txt&apos;.
+Use &apos;-f &lt;file&gt;&apos; to specify an alternative.
+</p>
+
+<p>
+Typically, all the crib sheets (and &apos;cribsheet.txt&apos;) for a quiz will be found in the same directory.
+Use &apos;-d &lt;dir&gt;&apos; to specify this directory.
+Typically, the directory names the quiz.
+</p>
+
+<p>
+If &apos;-d &lt;dir&gt;&apos; does not specify an absolute pathname then
+&apos;dir&apos; is relative to the directory that contains the program (which may not be &apos;pwd&apos;).
+</p>
+
+<p>
+By default, a quiz starts with the first crib sheet listed in &apos;cribsheet.txt&apos;
+but the quiz can be started with any crib sheet using the &apos;-s&apos; option
+to specify the crib sheet by name.
+</p>
+
+<p>
+Only the first few characters of the crib sheet name are needed.
+For larger quizzes split into &apos;chapters&apos; and &apos;sections&apos;,
+the crib sheet name typically begins with
+the &apos;chapter&apos;/&apos;section&apos; number so:
+<pre>
+    -s 2        // begin with chapter 2
+    -s 23       // begin with section 3 of chapter 2
+</pre>
+</p>
+
+<p>
+Statements in crib sheets (usually) contain terms the program blanks out when posing a question.
+By default, the proram will blank out two terms in each statement.
+Use &apos;-c &lt;n&gt;&apos; to blank out a different number of terms.
+</p>
+
+<p>
+Note: To read crib sheets without questions and answers, use &apos;-c 0&apos;
+</p>
+
+<p>
+Use &apos;-h&apos; to enter this tutorial but then you already knew that.
+</p>
+
+<p>
+Use &apos;-t&apos; to use test mode.
+Test mode runs short quizzes found in the test directory.
+</p>
+
+<p>
+Use &apos;-p&apos; to just parse and print a crib sheet and exit.
+No questions and answers, no prompts.
+Used to test/debug crib sheets.
+</p>
+
+<p>
+Use &apos;-p -r&apos; to just parse and print the parse tree and exit.
+Used to debug the crib sheet parser.
+</p>
