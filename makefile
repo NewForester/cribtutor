@@ -23,7 +23,7 @@ cribtutor.o:		Quiz.h SectionNumber.h Html.h
 Quiz.o:			Quiz.h SectionNumber.h Dialogue.h Html.h
 Dialogue.o:		Dialogue.h Terms.h Quiz.h Html.h
 SectionNumber.o:	SectionNumber.h
-Terms.o:		Terms.h Quiz.h
+Terms.o:		Terms.h Quiz.h Html.h
 Html.o:			Html.h
 
 cribtutor:	$(OBJS)

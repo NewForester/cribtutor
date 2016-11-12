@@ -77,8 +77,9 @@ namespace       Html
     static  void    tidyContent (string& content, const string &tag, const bool startOfElement, const bool endOfElement);
     static  void    checkForPairedTerms (Element &element);
 
-    // helper routines with a single call site in newElement() or addSubelement()
+    // helper routines with a single call site in parseElement(), newElement() or addSubelement()
 
+    inline  bool    endOfSentence (const string& content);
     inline  bool    startOfSentence (const Element& parent, const string& content);
     inline  bool    extraNewLine (const Element& parent, const Element &element);
 
@@ -97,10 +98,6 @@ namespace       Html
     {
         return (printElement (stream, element), stream);
     }
-
-    // heuristic to determine if an element ends with text that ends a sentence
-
-    inline  bool    endsWithFullStop (const Element& element);
 
     // for debug of printElement() only
 
@@ -208,7 +205,11 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
         tidyContent(content, element.tag, element.contents.empty(), true);
 
         if (!content.empty())
+        {
+            element.endOfSentence = endOfSentence(content);
+
             element.contents.push_back(ElementPart (content));
+        }
     }
 }
 
@@ -327,6 +328,8 @@ void    Html::addSubelement (ifstream& input, Element& parent, Element& element,
 {
     const bool  lineBefore = lineBeforeSubElement(parent, element, htmlBlockElement);
     const bool  lineAfter  = lineAfterSubElement(element);
+
+    parent.endOfSentence   = element.endOfSentence;
 
     parent.contents.push_back(ElementPart (content, &element, lineBefore, lineAfter));
 
@@ -507,7 +510,7 @@ void Html::checkForPairedTerms (Element &element)
 
 //----------------------------------------------------------------------------//
 //
-// Helper routines with a single call site in newElement() or addSubelement().
+// Helper routines with a single call site.
 //
 // These routines are used to set 'state' flags in new Element or ElementPart
 // objects.  All return bool.
@@ -518,7 +521,22 @@ void Html::checkForPairedTerms (Element &element)
 //
 //----------------------------------------------------------------------------//
 
-//----  Will the next element be at the start a sentence ?
+//----  Does content end a sentence ?
+
+bool    Html::endOfSentence (const string& content)
+{
+    size_t len = content.length();
+
+    if (len == 0 || content[len - 1] != '.') return (false);
+    if (len == 1 || content[len - 2] != '.') return (true);
+    if (len == 2 || content[len - 3] != '.') return (true);
+
+    // not elipsis ...
+
+    return (false);
+}
+
+//----  Will the next element start a sentence ?
 
 bool    Html::startOfSentence (const Element& parent, const string& content)
 {
@@ -665,7 +683,7 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
                     stream << "\n";
 
                     if (element.tag == Markup::olst && subElement.tag == Markup::item)
-                        if (endsWithFullStop(subElement))
+                        if (subElement.endOfSentence)
                             stream << "\n";
                 }
             }
@@ -686,30 +704,6 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
 
         stream << endl << indent.substr(2) << endTag << endl;
     }
-}
-
-//----  Heuristic to determine if an element ends with text that ends a sentence
-
-bool    Html::endsWithFullStop (const Element& element)
-{
-    if (!element.contents.empty())
-    {
-        const string &  text = element.contents.back().text;
-
-        for (size_t pos = text.length() - 1; pos >= 0; --pos)
-        {
-            // only one full stop ... ellipsis don't count
-
-            if (text[pos] == '.')
-                if (pos == 0 || text[pos -1] != '.')
-                    return (true);
-
-            if (text[pos] != ' ')
-                break;
-        }
-    }
-
-    return (false);
 }
 
 //----------------------------------------------------------------------------//

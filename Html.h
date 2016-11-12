@@ -114,16 +114,18 @@ namespace       Html
 
         int         referenceCount;
         bool        strictOrder;
+        bool        endOfSentence;
         bool        startOfSentence;
         bool        extraNewLine;
         string      contentMask;
 
-        Element (string tag = Html::Markup::none, bool strictOrder = true, bool startOfSentence = false, bool extraNewLine = false) :
+        Element (string tag = Html::Markup::none) :
             tag (tag),
             referenceCount (0),
-            strictOrder (strictOrder),
-            startOfSentence (startOfSentence),
-            extraNewLine (extraNewLine)
+            strictOrder (true),
+            endOfSentence (false),
+            startOfSentence (false),
+            extraNewLine (false)
             {}
     };
 
