@@ -1,0 +1,344 @@
+<!--
+One of a set of help files for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<h1> For a description of how to drive the program hit return </h1>
+
+<p>
+Welcome to the Crib Tutor !
+</p>
+
+<p>
+The Crib Tutor is a simple program.
+It walks and talks:  do not expect it to sing and dance.
+</p>
+
+
+
+<h2> Simple Questions and Answers </h2>
+
+<p>
+The program presents assertions (hopefully true and accurate statements) one by one.
+</p>
+
+<p>
+Each assertion may have one or more terms blanked out.
+You will be prompted to fill in the blanks.
+Do so and press return.
+E.g.
+<pre>
+    Roses and ___, violets are ___.
+    Fill in the blanks:
+</pre>
+to which you might respond:
+<pre>
+    red blue
+</pre>
+</p><p>
+If your response is correct, the program will move on to the next assertion
+otherwise you will be given a chance to try again:
+<pre>
+    Oops ... try again [yNq?]
+</pre>
+</p><p>
+The single letter response is expected.
+</p><p>
+<ol>
+<li>
+Enter &apos;y&apos; to try again.
+You can just try again without entering &apos;y&apos;.
+</li>
+<li>
+Enter &apos;n&apos; to move on to the next assertion.
+You can just press enter to move on.
+</li>
+<li>
+Enter &apos;q&apos; to quit.
+The program will exit.
+</li>
+<li>
+Enter &apos;?&apos; to see the answer.
+The program prints a correct response and moves on to the next question.
+</li>
+</ol>
+</p>
+
+<p>
+At the end of each chapter/section you may be given the opportunity to do
+the whole chapter/section again.
+</p>
+
+
+
+<h2> Navigation </h2>
+
+<p>
+A small crib sheet may not be divided into chapters/sections
+but larger crib sheets almost certainly will.
+</p>
+
+<p>
+When a crib sheet is so divided,
+you will be given the opportunity to skip and repeat chapters/sections.
+<pre>
+    Another Section
+    Skip [yNq] ?
+
+    ... lots of questions ...
+
+    Another Section
+    Repeat [yNq] ?
+</pre>
+</p>
+
+<p>
+Skip chapters/sections you have done before and do not want to do again.
+You can &apos;fast forward&apos; to start at a specific chapter/section using
+the command line option &apos;--skipto&apos;.
+</p>
+
+<p>
+You may want to repeat a chapter/section
+when you have answered some questions incorrectly.
+Be aware the terms blanked may be different from last time.
+</p>
+
+<p>
+Each assertion has a number of terms
+but the program only blanks so many chosen at random.
+By default, it will blank at most two terms in each assertion
+but you can change this using the command line option &apos;--choices&apos;.
+</p>
+
+<p>
+You may want to repeat a chapter/section
+even when you have answered all questions correctly.
+Why ?
+Because the number of &apos;choices&apos; is upped by one
+and so some questions will have more blanked terms.
+</p>
+
+<p>
+If you answered all questions correctly
+and upping the &apos;choices&apos; will make no difference to the questions
+you won&apos;t be asked if you want to repeat the chapter/section.
+</p>
+
+<p>
+An assertion with no blanked terms is simply printed, no questions asked.
+As the number of choices goes up, assertions with few terms are also simply printed
+and only those with many blanked terms are quizzed.
+</p>
+
+<p>
+You can just read a crib sheet without questions by invoking the program
+with &apos;--choices 0&apos;
+</p>
+
+<p>
+Remember you can quit at any time and restart later using &apos;--skipto&apos;
+to resume the chapter where you left off
+and then responding &apos;y&apos; to skip sections you don't want to do again.
+</p>
+
+
+
+<h2> Compound and Hyphenated Terms </h2>
+
+<p>
+Many terms are single words, but some, such as &apos;black hole&apos;
+or &apos;point singularity&apos;, are not.
+In a crib sheet, a term like black hole might be written
+as two simple, one word, terms that can be blanked independently
+or as one compound term where both words are either blanked or not.
+</p>
+
+<p>
+A well thought out crib sheet will be consistent:
+it will not use a compound term in one place and two simple terms in another.
+The program cannot correct inconsistency of this nature
+any more than it can correct bad spelling.
+</p>
+
+<p>
+For compound terms, the program uses a sequence of blanks so that you know
+how many words are expected.
+In terms of choices, a compound term is one choice
+so more blanks may appear than you might expect.
+</p>
+
+<p>
+Names comprising more than one word,
+such as World Health Organisation, are compound terms.
+For these, capitalisation is expected,
+even when the name appears at the start of a sentence.
+</p>
+
+<p>
+A hyphenated term (such as 'read-only') is like a compound term
+only '-' (the minus sign) is used to separate words instead of a space.
+The program indicates hyphenated terms by printing a '-' between the words
+instead of a space.
+When you enter your response, you may enter either '-' or space between the words.
+</p>
+
+<p>
+The program does not treat &apos;microcomputer&apos;, &apos;micro computer&apos;
+and &apos;micro-computer&apos; as alternatives.
+A well thought out crib sheet will pick one spelling and use it consistently.
+</p>
+
+
+
+<h2> Unordered Lists and Paired Terms </h2>
+
+<p>
+Some questions will be constructed from unordered lists.  For example:
+<pre>
+    The four cardinal points are: north, ____, east and ____.
+    Fill in the blanks:
+</pre>
+</p>
+
+<p>
+In this case, you would expect the answer to be:
+<pre>
+    south; west
+</pre>
+but it could be:
+<pre>
+    west; south
+</pre>
+That would be annoying.
+</p>
+
+<p>
+A well thought out crib sheet will not be deliberately irritating in this fashion
+but remembering the exact order of 7 or 8 terms in a list is difficult
+and usually misses the point:
+remembering the terms is important, not their order.
+</p>
+
+<p>
+Therefore the program allows blanks from unordered lists to be filled in in any order.
+Hopefully you won&apos;t even notice.
+</p>
+
+<p>
+Questions may contain terms paired by the conjunctions 'and' or 'or':
+<pre>
+    The two poles of a magnet are ____ and ____.
+    Fill in the blanks:
+</pre>
+The program will allow you to fill in the blanks either way
+("negative, positive" or "positive, negative").
+Just don't enter the 'and' (or the 'or').
+</p>
+
+<p>
+Questions may contain pairs of terms separated by a slash ('/')
+instead of a conjunction:
+<pre>
+    A closed question requires a ____/____ response.
+    Fill in the blanks:
+</pre>
+The program will allow you to fill in the blanks in either way
+(so "yes/no" or "no/yes").
+You may enter the '/' or just a space between the words.
+</p>
+
+
+
+<h2> Typographical Leeway </h2>
+
+<p>
+The program will generally consider
+a response containing a typo to be an incorrect response,
+which can be frustrating.
+</p>
+
+<p>
+There are number of ways in which the program tries to reduce this frustration.
+</p>
+
+<p>
+It will accept alternative spellings in certain simple and common cases.
+E.g. &apos;-ize&apos; for &apos;-ise&apos; and vice versa.
+</p>
+
+<p>
+It will accept the plural instead of singular and vice versa for common cases.
+E.g. &apos;axes&apos; for &apos;axis&apos; (and &apos;ax&apos;).
+However, a well thought out crib sheet will phrase assertions so that it is clear
+whether a singular or plural noun is required.
+</p>
+
+<p>
+For simple terms blanked at the start of a sentence,
+the program will accept a response with or without the initial letter capitalised.
+</p>
+
+<p>
+Finally, the program shows correct responses
+with terms terminated by comma or semi-colon.
+The comma indicates terms from an unordered list
+and no punctuation separates the words in a compound term.
+You can enter response with or without punctuation characters:
+the program simply ignores a semi-colon, comma (or full stop) at the of a word.
+</p>
+
+
+
+<h2> Tips and Tricks </h2>
+
+<p>
+You will find these features by accident but just for the record ...
+</p>
+
+<p>
+No response (just press return) to the
+<pre>
+    Fill in the blanks:
+</pre>
+prompt moves on to the next question (or the end of chapter/section).
+This effectively skips this question as no response
+does not count as an incorrect answer.
+</p>
+
+<p>
+In response to the
+<pre>
+    Fill in the blanks:
+</pre>
+prompt, a single letter response of &apos;q&apos; or &apos;?&apos;
+is taken to be the response to the next prompt:
+<pre>
+    Oops ... try again [yNq?]
+</pre>
+</p>
+
+<p>
+Any response of more than a single character to the
+<pre>
+    Oops ... try again [yNq?]
+</pre>
+prompt is taken to be an implicit &apos;y&apos; and is checked without issuing the
+<pre>
+    Fill in the blanks:
+</pre>
+prompt.
+</p>
+
+<p>
+Finally, just a little hint:
+<pre>
+    ./cribtutor dir skip_to choices cribsheet_name
+</pre>
+is, effectively, the same as:
+<pre>
+    ./cribtutor -d dir -s skip_to -c choices -f cribsheet_name
+</pre>
+</p>

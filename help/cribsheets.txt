@@ -7,5 +7,6 @@
 
 options.html
 command-line.html
+drivers-guide.html
 
 # EOF
