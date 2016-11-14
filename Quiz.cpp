@@ -249,7 +249,8 @@ bool    Quiz::Process::paragraphs (const ContentsIterator& first, const Contents
 {
     bool    allResponsesGood = true;
 
-    shuffleParagraphs (first, last);
+    if (choices > 0)
+        shuffleParagraphs (first, last);
 
     // for each paragraph
 
@@ -261,7 +262,8 @@ bool    Quiz::Process::paragraphs (const ContentsIterator& first, const Contents
 
         if (paragraph.tag != Html::Markup::para) continue;
 
-        shuffleOrderedLists (paragraph);
+        if (choices > 0)
+            shuffleOrderedLists (paragraph);
 
         // make a list of terms that may be blanked
 
