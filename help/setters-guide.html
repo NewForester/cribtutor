@@ -1,0 +1,870 @@
+<!--
+One of a set of help files for the
+    https://github.com/NewForester/cribtutor project
+    Copyright (C) 2016, NewForester
+    Released under the terms of the GNU GPL v2
+-->
+
+<h1> For notes on how to write crib sheets hit return </h1>
+
+<p>
+So you want to write your own crib sheets ?
+It is an even more effective way of learning the essentials of a subject
+but it is not quick and creating good crib sheets is not automatic.
+</p>
+
+<p>
+The crib sheets used by the cribtutor program contain html markup.
+The program is not a web application (although someday it might be)
+although it should be able to parse any html document.
+</p>
+
+<p>
+However, the program cannot turn an arbitrary web page into a quiz:
+it recognises a limited number of html elements and processes some of them in ways
+specific to the program.
+Thus crib sheets are best crafted specially for the program.
+</p>
+<p>
+Questions should be constructed to reinforce what is being learnt.
+A good quiz has a lot to do with containing questions that are not too easy but not too hard
+and a really good quiz is not tedious but fun.
+</p>
+<p>
+It is important to avoid inconsistency and ambiguity lest the quiz become a frustrating guessing game.
+</p>
+
+
+
+<h2> Html Markup </h2>
+
+<p>
+The user interface is simple:
+html markup other than that described below,
+such as bold and italic,
+may be present in a crib sheet but the program ignores it.
+</p>
+
+<h3> Html Elements Recognised by the Program </h3>
+<p>
+Terms that can be blanked are enclosed in &lt;em&gt; ... &lt;/em&gt;.
+Most terms are single words.
+Those that comprise more than one word are called &apos;compound terms&apos; or &apos;hyphenated terms&apos;
+and are handled slightly differently.
+</p><p>
+Quiz questions are formed by blanking terms from sentences enclosed in &lt;p&gt; ... &lt;/p&gt;.
+An html paragraph containing no terms is simply printed
+but otherwise each paragraph is a separate question.
+</p><p>
+Within paragraphs, the program recognises code blocks (&lt;pre&gt; ... &lt;/pre&gt;)
+and both ordered (&lt;ol&gt; ... &lt;/ol&gt;) and unordered (&lt;ul&gt; ... &lt;/ul&gt;) lists.
+Lists have special interpretation and should not be nested.
+Code blocks are not expected to contain terms but lists are.
+Terms should be nested within list items (&lt;li&gt; ... &lt;/li&gt;) and not the other way around.
+</p><p>
+The program recognises &lt;br&gt;.
+Two successive &lt;br&gt; will produce a blank line within a question.
+Contrast with an empty paragraph (e.g. &lt;p /&gt;),
+which will produce a blank line between questions.
+</p><p>
+Outside paragraphs, the program recognises three levels of header: &lt;h1&gt;, &lt;h2&gt; and &lt;h3&gt;.
+These are used to structure a quiz into &apos;chapters&apos; and &apos;sections&apos;.
+The program recognises, but ignores &lt;hr&gt;.
+</p><p>
+The program recognises html comments (&lt;!-- ... --&gt;) anywhere.
+They may be used (temporarily) to comment out other html elements.
+Comments are used to direct the behaviour of the program in two particular circumstances.
+Comments are not output by the program.
+</p><p>
+The program recognises and converts html escape sequences.
+Note &apos;&amp;lt;&apos; and &apos;&amp;gt;&apos; must be used for &apos;&lt;&apos; and &apos;&gt;&apos;.
+The program ignores element attributes
+(in particular those that affect the &apos;numbering&apos; of lists).
+</p>
+
+
+<h3> The Blanking of Terms </h3>
+<p>
+A question with a larger number of terms blanked is, a priori,
+more difficult to answer correctly than a question with fewer terms blanked.
+</p><p>
+The user has some control over the level of difficultly through the &apos;--choices&apos; flag.
+This sets the maximum number of terms that may be blanked in each question.
+The default is two.
+Through the choice of terms, the quiz setter / author of the crib sheet
+also has some control over the level of difficultly of each question.
+</p><p>
+When there are more terms than choices,
+the program selects which terms to blank randomly.
+This means a different selection of terms will be blanked when a section is repeated.
+Furthermore, if the user chooses to repeat after answering all questions correctly
+then the number of choices will be one greater.
+</p><p>
+These measures are designed to make the quiz less predicable (and perhaps more fun).
+</p>
+
+
+<h3> Compound and Hyphentated Terms </h3>
+<p>
+When a simple term is blanked, it is printed as &quot;____&quot;.
+There is no indication as to the length of the term.
+</p><p>
+When a compound term is blanked, it is printed as a sequence of &quot;____&quot;
+separated by spaces to indicate how many words there are in the term.
+When a hyphenated term is blanked, it is printed as a sequence of &quot;____&quot;
+separated by &apos;-&apos; to indicate where the terms is split into words.
+</p><p>
+This means the number of &quot;____&quot; may be greater than the number of choices
+(that&apos;s a hint to the user).
+It also means a sequence of simple terms
+is difficult to distinguish from a compound term.
+Avoid such sequences:
+consider using a compound term, a hyphenated term, punctuation characters or an unordered list.
+</p>
+
+
+<h3> Unordered and Ordered Lists </h3>
+<p>
+The way the program treats ordered and unordered lists is different from that of an html viewer.
+In particular, it makes no attempt to &apos;number&apos; or &apos;bullet&apos; lists.
+</p><p>
+Unordered lists present a problem (that is more acute the longer the list):
+what is important is the terms in the list, not their order.
+The user is allowed to enter terms blanked from unordered lists in any order.
+</p><p>
+The program presents an unordered list as simply a sequence of words.
+The implication is that an unordered list is, essentially, a list of terms.
+It is recommend you use punctuation (such as the comma) between list items to avoid this appearing as a long compound term.
+</p><p>
+If you need a list where terms and ordinary text are mixed, then use an ordered list.
+The user will have to enter terms in question order.
+</p><p>
+The program presents each list item on a separate line.
+When a list item ends with a full stop, a blank line will separate it from the next list item.
+</p><p>
+The program does not provide numbering of items (but you can provide this yourself).
+List items can be shuffled (but this is hardly compatible with numbering).
+</p>
+
+
+<h3> Paired Terms </h3>
+<p>
+The programs considers adjacent terms separated by a conjunction
+(&quot; and &quot;, &quot; or &quot;, &quot;/&quot;) to be unordered mini-lists of just two items:
+if a question blanks both terms, the user may enter them in either order.
+</p>
+
+<p>
+If you do not want this behaviour, then look to rephrase the question:
+<pre>
+    It matters not if it takes &lt;em&gt;days&lt;/em&gt; or &lt;em&gt;months&lt;/em&gt; ...
+</pre>
+is a mini-list.
+<pre>
+    It does not matter whether it takes a &lt;em&gt;day&lt;/em&gt; or a &lt;em&gt;month&lt;/em&gt; ...
+</pre>
+is not a mini-list but:
+</p>
+
+<p>
+If, on the other hand, you do want this behaviour, you can always use a proper unordered list:
+<pre>
+    It does not matter whether it takes
+    &lt;ul&gt;
+    &lt;li&gt;a &lt;em&gt;day&lt;/em&gt; or&lt;/li&gt;
+    &lt;li&gt;a &lt;em&gt;month&lt;/em&gt;&lt;/li&gt;
+    &lt;/ul&gt;...
+</pre>
+</p>
+
+<p>
+There is a subtle difference between:
+<pre>
+    I don&apos;t care if it is &lt;em&gt;good&lt;/em&gt;/&lt;em&gt;bad&lt;/em&gt; ...
+</pre>
+and:
+<pre>
+    I don&apos;t care if it is &lt;em&gt;good/bad&lt;/em&gt; ...
+</pre>
+</p>
+<p>
+Both are unordered mini-lists of two terms but the first counts as two choices, the second as only one.
+</p>
+
+<p>
+Yes, longer mini-lists are possible:
+<pre>
+    I don&apos;t care if it is &lt;em&gt;good&lt;/em&gt;/&lt;em&gt;bad&lt;/em&gt;/&lt;em&gt;indifferent&lt;/em&gt; ...
+</pre>
+but a proper unordered list is probably to be preferred.
+</p>
+
+
+
+<h3> Html Examples </h3>
+<p>
+For examples of how the program formats html, look in the test directory.
+For example:
+<pre>
+    ./cribtutor -t -p -s test5
+</pre>
+prints the lists defined in &quot;test/test5-p.html&quot;.
+</p>
+
+
+
+<h2> Cribsheet Design </h2>
+
+<p>
+There is some flexibility when it comes to crib sheet design.
+
+This is intended to cope with both large and small subjects.
+
+However the approach is far from perfect.
+</p>
+
+<p>
+One limitation is that there cannot be more than 9 &apos;chapters&apos; or 9 &apos;sections&apos; in a &apos;chapter&apos;
+but these are crib sheets, not encyclopedias.
+</p>
+
+<p>
+Should the limitation of 9 becomes a problem consider restructuring your crib sheets
+or even splitting them into two or more subjects.
+</p>
+
+
+<h3> Cribsheets.txt </h3>
+
+<p>
+The program requires a file named (by default) &quot;cribsheets.txt&quot;.
+
+This file lists the crib sheets that make up the subject material for a quiz.
+
+Even the simplest subject with only a single crib sheet requires such a file.
+</p>
+
+<p>
+For larger subjects, the list may get quite long as the set of crib sheets grows and is refactored.
+
+The list should be in quiz order, which is the order in which you would want someone to read the crib sheets.
+</p>
+
+<p>
+The recommended approach is you create a subdirectory (of the directory in which the program resides)
+and place your &quot;cribsheets.txt&quot; file here along with all your crib sheets.  For example:
+<pre>
+    mkdir c++
+    mv templates.html c++
+    cat &gt; c++/cribsheets.txt
+    templates.html
+    ^D
+    ./cribtutor -d c++
+</pre>
+</p>
+
+<p>
+You may use &apos;#&apos; to comment your &quot;cribsheets.txt&quot; file
+or to comment out files in the list temporarily.
+
+Blank lines are ignored.
+</p>
+
+
+<h3> Chapters and Sections </h3>
+
+<p>
+Subject material can be subdivided into to &apos;chapters&apos; and &apos;sections&apos; using html headers.
+</p>
+
+<p>
+Suppose our subject comprises just one crib sheet file named &quot;templates.html&quot;.
+
+In this case:
+<ol>
+<li> * &lt;h2&gt; and &lt;h3&gt; headers introduce</li>
+<li> * chapters and sections respectively and</li>
+<li> * these are not numbered</li>
+</ol>
+
+The user will be presented with the &apos;Skip [yNq] ?&apos; prompt before each chapter/section
+and (in general) with the &apos;Repeat [yNq] ?&apos; at the end of each section/chapter.
+</p>
+
+<p>
+For larger subject material split over several crib sheet files,
+the program will move from one crib sheet to the next automatically.
+
+The user can quit at any time and resume with any crib sheet using the &apos;--skipto&apos; flag
+and the name of the crib sheet they wish to resume with.
+</p>
+
+<p>
+It is not expected users will know the names of crib sheets.
+It is expected crib sheet files will be &apos;numbered&apos; and users will resume by giving
+the chapter/section number at which they wish to resume.
+</p>
+
+<p>
+Suppose the crib sheet files are numbered thus:
+<pre>
+    1_Introduction.html
+    2_Program-Structure.html
+    3_Fundamental-Types.html
+    ...
+</pre>
+</p>
+
+<p>
+For single-digit crib sheets files:
+<ol>
+<li> * the expectation is that each file represents a chapter</li>
+<li> * the digit is taken to be the chapter number</li>
+<li> * sections are numbered automatically starting with 1</li>
+<li> * &lt;h1&gt; and &lt;h2&gt; headers introduce chapters and sections</li>
+<li> * &apos;--skipto&apos; can resume with chapters but not sections</li>
+</ol>
+</p>
+
+<p>
+An even more ambitious approach to crib sheet numbering might have:
+<pre>
+    3_Fundamental-Types.html
+    31_bool.html
+    32_char.html
+    33_integers.html
+    34_floats.html
+    ...
+</pre>
+</p>
+
+<p>
+For double-digit crib sheet files:
+<ol>
+<li> * the expectation is that each file represents a section</li>
+<li> * the digits are taken to be the chapter and section number</li>
+<li> * &lt;h2&gt; and &lt;h3&gt; headers introduce chapters and sections</li>
+<li> * &apos;--skipto&apos; can resume with sections.</li>
+</ol>
+</p>
+
+
+<h3> The Role of &lt;h1&gt; Headers </h3>
+
+<p>
+Are html &lt;h1&gt; headers ignored when &lt;h2&gt; and &lt;h3&gt; headers represent chapter/sections ?
+
+No.
+</p>
+
+<p>
+For double-digit crib sheet files, an &lt;h1&gt; header is printed out without a prompt.
+Except when the header text is the same as the previous &lt;h1&gt; header text.
+In which case it is ignored.
+
+Suppose each double-digit crib sheet begins with the same &lt;h1&gt; header.
+The program will print the &lt;h1&gt; header text once and once only
+whether the user uses &apos;--skipto&apos; or not.
+</p>
+
+<p>
+For unnumbered crib sheets, &lt;h1&gt; headers are printed in the same circumstances
+but are accompanied by a &apos;Skip [yNq] ?&apos; prompt.
+
+An answer of &apos;y&apos; skips the rest of the crib sheet.
+
+There is no &apos;Repeat [yNq] ?&apos; prompt at the end.
+</p>
+
+
+
+<h2> Breaking Predictability </h2>
+
+<p>
+People are good at remembering what comes next in a sequence and will quickly learn their way through a quiz
+that always presents the questions in the same way and in the same order.
+</p>
+
+<p>
+That is not what a crib sheet quiz is about.
+It is about being able to recall (almost &apos;at random&apos;) pertinent facts individually and independently of context.
+</p>
+
+<p>
+With this in mind, the program is designed to break the predictability of sequences using pseudo random choices and shuffles.
+
+This, at the very least, forces the user to read and answer each question rather than filling in the blanks by rote.
+
+The higher level of engagement this requires should help the user remember individual facts outside the context of the quiz.
+</p>
+
+
+<h3> Blanking Terms </h3>
+
+<p>
+The program blanks terms at random but the crib sheet author determines how many terms there are in each question
+and the user chooses how many of these are blanked through the &apos;--choices&apos; command line option.
+</p>
+
+<p>
+When the number of choices is greater than or equal to the number of terms, all terms are blanked.
+Otherwise, the program choose the appropriate number of terms to blank at random.
+
+This means, when a section is repeated, questions with a larger number of terms
+will have a different selection blanked thus breaking the predictability.
+</p>
+
+
+<h3> Shuffling Ordered Lists </h3>
+
+<p>
+Ordered lists are treated as a single question and so are a common case where the number of terms exceeds the number of choices.
+
+Unlike unordered lists, ordered lists require blanks be filled in question order.
+
+Questions become predictable with practice since they typically provide a lot more context than unordered lists.
+</p>
+
+<p>
+The author of a crib sheet can introduce an element of unpredictability
+by adding a specific comment to the html source of an ordered list:
+
+<pre>
+    &lt;ol&gt;&lt;!-- Shuffle List --&gt;
+        &lt;li&gt;...&lt;/li&gt;
+            ...
+        &lt;li&gt;...&lt;/li&gt;
+    &lt;/ol&gt;
+</pre>
+
+The comment instructs the program to shuffle the list items before generating a question.
+</p>
+
+<p>
+Since the user will be presented with list items in a different order to which they were written,
+extra care needs to be taken to ensure each item makes sense on its own.
+</p>
+
+<p>
+At present the user cannot turn such shuffling on and off.
+
+There is no means of shuffling items in unordered lists.
+</p>
+
+
+<h3> Shuffling Paragraphs </h3>
+
+<p>
+The third way in which the program can break the predictability of a quiz is to randomise the order of questions by shuffling html paragraphs.
+</p>
+
+<p>
+The author of a crib sheet introduces this element of unpredictability by adding a pair of specific html comments either side of the
+html paragraphs to be shuffled:
+
+<pre>
+    &lt;!-- Shuffle On --&gt;
+
+    ...
+
+    &lt;!-- Shuffle Off --&gt;
+</pre>
+
+The program takes the &quot;Shuffle On&quot; comment as an instruction to shuffle the paragraphs that follow until it encounters a &quot;Shuffle Off&quot; comment,
+and html header or the end of file.
+
+Several groups of paragraphs within the same section may be each shuffled individually.
+</p>
+
+<p>
+Since the user will be presented with questions in a different order to which the paragraphs were written,
+extra care needs to be taken to ensure each paragraph makes sense on it own.
+</p>
+
+<p>
+At present the user cannot turn such shuffling on and off.
+</p>
+
+
+
+<h2> Development Tips </h2>
+
+<p>
+You may use any text or html editor to prepare your crib sheets.
+
+WYSIWYG editors have a reputation for generating all sorts of nonsense that you get but cannot see.
+The program should simply ignore such nonsense but experiment a little to make sure before writing your first serious crib sheet.
+</p>
+
+<p>
+The structure of html is such that one missing / or a / where is it should not be produces nonsense.
+
+How html browsers and viewers cope with syntax errors is not mandated.
+
+Some cope better than others.
+</p>
+<p>
+The cribtutor program is &apos;simple&apos; and does not try to second guess what was intended
+but it does implement a couple of features to help spot and correct syntax errors.
+</p>
+
+<p>
+Consider the command line:
+<pre>
+    ./cribtutor -d c++ -s temp
+</pre>
+which may well run a quiz starting with the crib sheet file &apos;c++/templates.html&apos;.
+The command line:
+<pre>
+    ./cribtutor -d c++ -s temp -p
+</pre>
+will parse the file &apos;c++/templates.html&apos;, print the parse tree and exit.
+</p>
+
+<p>
+This is a useful sanity check:  a quick visual inspection to confirm it all looks good before trying a quiz.
+</p>
+
+<p>
+If nothing is output, the parser has crashed.
+
+This is almost certainly due to some corner case resulting in string::npos being passed as a parameter to some std:string class method where it should not be.
+The code has been thrice reviewed to avoid such crashes so they are unlikely but not impossible.
+</p>
+
+<p>
+The program has been carefully coded to cope with unexpected end-of-file:  all open html elements are closed.
+
+The result will probably be a very long line of jumbled text that may suggest where the syntax error is but not what it is.
+</p>
+
+<p>
+As an aid to debugging, the program will print out an unexpected close tag.
+
+It will also print out an unexpected nested open tag (such as a paragraph within a paragraph).
+
+Look for one of these just before any jumbling to see what the problem is.
+</p>
+
+<p>
+A final tip.
+
+If you run a quiz and get a long sequence of &quot;____&quot; where you were not expecting one,
+there are probably two terms, the first of which is missing its close tag.
+
+Perhaps &lt;/me&gt; instead of &lt;/em&gt;.
+</p>
+
+
+
+<h2> Design Tips </h2>
+
+<p>
+Writing any language is more difficult than reading or speaking it.
+
+You cannot know if the reader understands what you mean and you cannot rephrase when they don't.
+All you can do is your best to make your meaning clear.
+</p>
+
+<p>
+Now deliberately remove several (key) words from each sentence and you have a fill-in-the-blanks quiz.
+</p>
+
+<p>
+What follow are a number of tips you might find useful
+but it is recommended you experiment and find your own style.
+The examples are, of course, a little on the trivial side.
+</p>
+
+
+<h3> Broad Brush Strokes </h3>
+
+<p>
+You are likely to base your crib sheet on existing documentation.
+
+You could start with a copy/paste (so long as that doesn&apos;t violate copyright)
+but it is recommended you don&apos;t.
+</p>
+
+<p>
+Make your own notes of the things you think are important to remember and start from those.
+
+As you make/enter these notes consider the structure of your crib sheet in terms of chapter/sections
+and rearrange your notes as you go along.
+</p>
+
+<p>
+Your notes may include examples and even lists but, if you are using a text editor, go light on the html markup.
+
+Your notes may have &lt; and &gt; in them and it is probably best to convert these to &amp;lt; and &amp;gt; before adding too much html markup.
+</p>
+
+<p>
+These characters may occur most often in examples, so refining these may be something you will want to do earlier rather than later.
+
+Enclose examples in &lt;pre&gt; ... &lt;/pre&gt;.
+</p>
+
+<p>
+You should convert &amp; &apos; and &quot; to their html equivalents but you can do this any time.
+
+Since this tends to make the original text less easy to read, the later you convert these the better.
+</p>
+
+<p>
+Next consider your sentences.
+
+Short declarative sentences are best.
+
+Consider breaking long sentences into several short ones.
+
+You might make notes with a blank line between each sentence:  you can always group several together into one paragraph later.
+</p>
+
+<p>
+Next you might tidy up and enter html markup for lists, both ordered and unordered.
+</p>
+
+<p>
+Now you might go through the plain text of your crib sheet and mark the terms in each sentence and each list item.
+
+Do this without thinking about how many blanks per question.
+</p>
+
+<p>
+At this point you need to check for mini-lists you created when marking up terms.
+
+It is actually quite easy to create these without realising.
+
+Consider whether you want / don&apos;t want each one and revise accordingly.
+</p>
+
+<p>
+Next add paragraph markup.
+
+Paragraphs can have more that one sentence.
+
+As you proceed, consider how many terms there are in paragraph.
+
+You may want to revise both to achieve a more even distribution.
+</p>
+
+<p>
+You might even consider splitting really long lists into shorter, easier to remember lists.
+</p>
+
+<p>
+If you&apos;ve not used a spell checker yet, do so.
+
+Now you are ready to run your crib sheet past the program.
+</p>
+
+<p>
+First use the -p option to just print the parsed crib sheet without questions.
+
+Read it through.  Revise, particularly any apparent html syntax errors.  Repeat.
+</p>
+
+<p>
+Only now try a quiz generated from your crib sheet.  Revise, particularly with respect to consistency.  Repeat.
+</p>
+
+<p>
+Leave it a day and try your crib sheet quiz again with a larger number of choices.
+
+Leave it a week and try again with an even larger number of choices.
+</p>
+
+<p>
+If you are lucky enough to have a guinea pig, let it loose on your crib sheet quiz and take feed back seriously.
+
+Especially when it squeals.
+</p>
+
+
+<h3> Avoid Ambiguity:  Be Consistent </h3>
+
+<p>
+The word markup could be written mark-up or even mark up.
+You have no problem reading that.
+</p>
+
+<p>
+Imagine a crib sheet that uses all three spellings and then imagine the word is blanked out.
+You know the answer but you&apos;d have to guess which spelling has been blanked out.
+</p>
+
+<p>
+Image that a few questions later, it is blanked out again.
+You&apos;d probably guess the same as last time and you might not be lucky.
+</p>
+
+<p>
+This kind of ambiguity is very annoying and counter-productive.
+Being consistent is essential.
+</p>
+
+<p>
+In this case, pick one spelling and stick to it.
+Which spelling you choose is far less important.
+</p>
+
+<p>
+As another example, consider a &apos;sort order&apos; and sequence that has this sort order.
+Is the sequence sorted or ordered ?
+It is both, of course, but for the purposes of a crib sheet you need to pick one and stick to it.
+</p>
+
+
+<h3> The Gentle Art of Reinforcement </h3>
+
+<p>
+Do you find the verses of a song or the chorus easier to remember ?
+</p>
+
+<p>
+Forget whatever they told you in school about writing interesting prose.
+
+Repetition is good in crib sheets and not just for the sake of consistency.
+</p>
+
+<p>
+Keep sentences short, keep them declarative.
+
+Fortunately the nature of a crib sheet should encourage this.
+</p>
+
+<p>
+A quiz is not supposed to be all that hard.
+
+It is about making it easier to recall what is already known.
+
+It is about reinforcing what the person doing the quiz has previously learnt.
+</p>
+
+<p>
+Repetition is good, not just consistent spelling and use of terms
+but in the structure of sentences and sections.
+</p>
+
+<p>
+Consider a crib sheet that concerns IP addresses.
+
+It is natural to refer to the &quot;address&quot; because it is clear from the context that this means &quot;IP address&quot;.
+</p>
+
+<p>
+However, writing IP address (at least for the first occurrence in a paragraph)
+helps reinforce the notion that the crib sheet is about IP, and not some other kind of, addresses.
+
+It may also provide just that little extra context needed to fill in the blanks.
+</p>
+
+<p>
+Here is another very trivial example:
+<pre>
+   Use ____() to close the file.
+</pre>
+You might think that a bit of a give away and prefer something like:
+<pre>
+   Use ____() to sever the connection to the file.
+</pre>
+It makes for a harder quiz but does not help reinforce the message that to close a file, use the eponymous function.
+</p>
+
+
+<h3> The quick brown fox jumps over the lazy dog </h3>
+
+<p>
+Choosing which words to turn into terms that may be blanked in a quiz is not always straight forward.
+
+Deciding which words you would highlight with a marker pen is usually a good start.
+</p>
+
+<p>
+You will of course, want to experiment, but it would seem that blanking nouns (fox, dog)
+works better than verbs (leaps) or adjectives (sly, red, sleepy).
+Adverbs seems to be particularly hard to remember.
+</p>
+
+<p>
+Sometimes the word you would want to highlight is an adjective:
+<pre>
+    To stop, press the ____ button
+</pre>
+but highlighting the noun will work just as well:
+<pre>
+    To stop, press the red ____
+</pre>
+because what the user needs to remember &apos;red button&apos;.
+</p>
+
+
+<h3> Visual Clues </h3>
+
+<p>
+Consider the question:
+<pre>
+    Use the ____ function to associate an IP address and port with a ____.
+</pre>
+This question is not all that hard but change it to:
+<pre>
+    Use ____ to associate an address/port with a ____.
+</pre>
+The question appears to want two nouns but the first noun names the verb &apos;bind&apos;.
+This can be confusing.
+</p>
+
+<p>
+One way of avoiding the confusion is to provide a visual clue to indicate the answer is the name of a function:
+<pre>
+    Use ____() to associate an address/port with a ____.
+</pre>
+The answer is &apos;bind&apos; (without parentheses).
+</p>
+
+<p>
+Use the parentheses as a visual clue.
+Questions phrased so the answer is &apos;bind()&apos; (with parentheses) will annoy users and teach them nothing.
+</p>
+
+
+<h3> How Many Blanks ? </h3>
+
+<p>
+The more blanks there are in a question the more difficult it is to answer the question
+(without a typo).
+</p>
+
+<p>
+Since the default is to blank at most two terms per question, questions with only one or two terms
+have all terms blanked.
+
+Aiming for three or four terms per question seems like a good opening gambit
+as random blanking of terms will make the quiz more interesting.
+</p>
+
+<p>
+For unordered lists, there will most likely be one term per list item.
+For ordered lists, there may well be two terms per list item.
+More than just two terms need to be blanked.
+</p>
+
+<p>
+This is why the &apos;--choices&apos; flag is there and why the program will automatically increment the choices
+when the user gets a section right and chooses to repeat.
+</p>
+
+<p>
+As the number of choices increases, the program stops turning paragraphs with few terms into questions
+so that the user may concentrate on the lists.
+</p>
+
+<p>
+So in sections with long lists, perhaps aim for (non-list) questions with fewer terms
+that you would in sections with no long lists.
+</p>
+
+<p>
+If you feel a question has too many questions, consider rephrasing so it can be split into two.
+</p>

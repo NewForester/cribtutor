@@ -8,5 +8,6 @@
 options.html
 command-line.html
 drivers-guide.html
+setters-guide.html
 
 # EOF
