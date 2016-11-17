@@ -20,7 +20,7 @@ The result of the build is an executable named _cribtutor_.
 
 For more information on how to invoke the program, enter:
 
-    ./cribtutor --help
+    ./cribtutor
 
 An example crib-sheet is provided.
 To generate a quiz from this example, enter:
@@ -29,7 +29,17 @@ To generate a quiz from this example, enter:
 
 ---
 
-Help ...
+Help can be invoked with:
+
+    ./cribtutor --help
+
+This allows the browsing several help topics:
+<ul>
+  <li>command line options</li>
+  <li>how to use the program</li>
+  <li>how to write crib sheets for the program</li>
+  <li>the basic ideas behind the program</li>
+</ul>
 
 ---
 
@@ -94,6 +104,9 @@ Copyright (C) 2016, NewForester, released under the terms of the GNU GPL v2.
 
 ---
 
-Program comitted, test files comitted.  Help files still to go.
+Program, help files and test files committed.
+Example crib sheet committed.
+
+No longer under development although bug fixes are likely.
 
     NewForester, November 2016
