@@ -10,6 +10,7 @@ test2-p.html
 test3-p.html
 test4-p.html
 test5-p.html
+test6-p.html
 
 1_test.html
 23_test.html
