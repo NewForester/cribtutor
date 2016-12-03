@@ -60,6 +60,7 @@ namespace       Html
         static string  item ("<li>");
         static string  newl ("<br>");
         static string  rule ("<hr>");
+        static string  link ("<a>");
     };
 
     namespace Comment

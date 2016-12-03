@@ -69,8 +69,9 @@ namespace       Html
     inline  bool    unexpectedCloseTag  (const string &tag, string& content);
     inline  bool    unexpectedNestedTag (const string &tag, const string &previous, string& content);
 
-    inline  void    stripAttributes (string &tag);
-    inline  bool    openAndCloseTag (string &tag);
+    inline  bool    checkImageElement (string &tag);
+    inline  void    stripAttributes   (string &tag);
+    inline  bool    openAndCloseTag   (string &tag);
 
     // the two third level routines that do some real work
 
@@ -167,6 +168,13 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
 
             if (!comment.empty())
                 subelement.contents.push_back(ElementPart (comment));
+
+            continue;
+        }
+
+        if (checkImageElement (tag))
+        {
+            content += tag;
 
             continue;
         }
@@ -344,9 +352,13 @@ void    Html::addSubelement (ifstream& input, Element& parent, Element& element,
 //
 // The first two routines check for two cases of a malformed cribsheet that
 // commonly occur when the html in a cribsheet is authored in a text, rather
-// than an html editor.
+// than an html, editor.
 //
-// stripAttributes() discards html attributes: the program has no use for them.
+// checkImageElement() checks for an <img ...> element and strips out the
+// text from the alt="text" attribute.  The text is retained and the element
+// discarded.
+//
+// stripAttributes() discards html attributes the program has no use for.
 //
 // openAndCloseTag() recognises html tags that open and close an element
 // (such as <br> and <p />).  The parser needs to handle them differently.
@@ -377,6 +389,30 @@ bool    Html::unexpectedNestedTag (const string &tag, const string &previous, st
     }
 
     return (false);
+}
+
+//----  check for <img alt="text">
+
+bool    Html::checkImageElement (string &tag)
+{
+    if (tag.substr(0,5) != "<img ")
+        return (false);
+
+    const int   bpos = tag.find("alt=\"");
+
+    if (bpos == string::npos)
+        return (false);
+
+    string  text = tag.substr(bpos + sizeof ("alt=\"") - 1, string::npos);
+
+    const int   epos = text.find("\"");
+
+    if (epos == string::npos)
+        return (false);
+
+    tag = text.substr(0,epos);
+
+    return (true);
 }
 
 //----  remove html attributes from a tag
