@@ -77,3 +77,32 @@ Fill in the blanks:
 
 Simple Test of Term Blanking and Ordering
     Repeat [yNq] ? 
+
+Simple Check that Terminating Separators are Handle Properly
+    Skip [yNq] ? 
+Answer should be operator+: ____.
+Fill in the blanks:  >> operator+,;
+
+Answer should be operator-: ____.
+Fill in the blanks:  >> operator-,;
+
+Answer should be operator*: ____.
+Fill in the blanks:  >> operator*,;
+
+Answer should be operator/: ____.
+Fill in the blanks:  >> operator/,;
+
+
+Simple Check that Terminating Separators are Handle Properly
+    Repeat [yNq] ? 
+Answer should be operator+: ____.
+Fill in the blanks: 
+Answer should be operator-: ____.
+Fill in the blanks: 
+Answer should be operator*: ____.
+Fill in the blanks: 
+Answer should be operator/: ____.
+Fill in the blanks: 
+
+Test Capitalisation at the Start of a Sentence
+    Skip [yNq] ? 
