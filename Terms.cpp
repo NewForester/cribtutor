@@ -131,9 +131,22 @@ typedef deque< string > WordList;
 
 static  void    splitIntoWords (const string& line, WordList& wordList);
 
+//---- Avoid length error crashes
+
 inline  size_t  safeLength(size_t bpos, size_t epos)
 {
     return ((epos == string::npos) ? epos : epos - bpos);
+}
+
+//---- Adjust end position to avoid null strings
+
+inline  size_t  safeEndPosition(size_t epos, const string& text)
+{
+    if (epos != string::npos)
+        if (text[epos + 1] == '\0')
+            return (string::npos);
+
+    return (epos);
 }
 
 //----  local routines
@@ -235,7 +248,7 @@ void    Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, i
         element.contentMask = "";
 
         size_t  bpos = 0;
-        size_t  epos = termText.find_first_of("/");
+        size_t  epos = safeEndPosition(termText.find_first_of("/"), termText);
 
         while (epos != string::npos)
         {
@@ -246,10 +259,11 @@ void    Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, i
             element.contentMask += "/";
 
             bpos = epos + 1;
-            epos = termText.find_first_of("/", bpos);
+            epos = safeEndPosition(termText.find_first_of("/", bpos), termText);
         }
 
-        termSet.insert(newTerm(element.contentMask, termText.substr(bpos)));
+        if (bpos != termText.length())
+            termSet.insert(newTerm(element.contentMask, termText.substr(bpos)));
 
         if (element.strictOrder)
         {
@@ -274,7 +288,7 @@ Terms::CompoundTerm  Terms::newTerm (string &contentMask, const string& term)
     // split off words one by one - using space or minus to separate them
 
     size_t  bpos = term.find_first_not_of(" ", 0);
-    size_t  epos = term.find_first_of(" -", bpos + 1);
+    size_t  epos = safeEndPosition(term.find_first_of(" -", bpos + 1), term);
 
     // first or only word is map key
 
@@ -297,7 +311,7 @@ Terms::CompoundTerm  Terms::newTerm (string &contentMask, const string& term)
         bpos = term.find_first_not_of(" ", epos);
         if (bpos == string::npos) break;
 
-        epos = term.find_first_of(" -", bpos + 1);
+        epos = safeEndPosition(term.find_first_of(" -", bpos + 1), term);
 
         termValue.push_back(term.substr(bpos, safeLength(bpos, epos)));
     }
