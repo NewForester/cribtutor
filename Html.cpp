@@ -33,16 +33,19 @@ using namespace std;
 // See Html.h for a description of the class interface and data structures.
 //
 // The html namespace offers two external routines, one to parse the html in
-// a cribsheet file and another to print out the resultant parsed structure.
+// a crib sheet file and another to print elements the resultant parse tree.
 //
-// Each of these simply calls an internal routine.  Both these routines have
-// a recursive design to handle the nesting of html elements.
+// The main parse routine is in two halves.
 //
-// To keep the print routine simple, static (peri-construction time) state
-// variables are set by the parser to indicate when to print blank lines etc.
+// The first half implements the mechanics of building the parse tree from
+// the html file.
 //
-// To keep the main parser routine simple, ugly details are delegated to
-// a suite of subroutines of which most have a single call site.
+// The second half implements policy:  when should be new lines be output by
+// the print routine.
+//
+// The print routine itself implements no policy.
+//
+// All three have a recursive design to handle the nesting of html elements.
 //
 //----------------------------------------------------------------------------//
 
@@ -50,7 +53,7 @@ namespace       Html
 {
     // the main routine of the html parser
 
-    static  void    parseElement (ifstream& input, Element &element, const bool htmlBlockElement = true);
+    static  void    parseElement (ifstream& input, Element &element);
 
     // the routines that actually read from the input.
 
@@ -59,10 +62,10 @@ namespace       Html
     static  string& readComment    (ifstream& input, string &comment, const string& content);
     inline  void    swallowNewLines(ifstream& input, bool condition);
 
-    // the two second level routines that do some real work
+    // routines that create Element and ElementPart objects
 
-    static  Element*    newElement (ifstream& input, const Element& parent, const string &tag, string& content);
-    static  void    addSubelement (ifstream& input, Element& parent, Element& element, string& content, const bool htmlBlockElement);
+    static  Element*    newElement (ifstream& input, const string &tag);
+    static  void    addSubelement (ifstream& input, Element& parent, Element& element, string& content);
 
     // helper routines with a single call site in parseElement()
 
@@ -73,15 +76,21 @@ namespace       Html
     inline  void    stripAttributes   (string &tag);
     inline  bool    openAndCloseTag   (string &tag);
 
-    // the two third level routines that do some real work
+    //------
 
-    static  void    tidyContent (string& content, const string &tag, const bool startOfElement, const bool endOfElement);
-    static  void    checkForPairedTerms (Element &element);
+    // annotate and tidy the parse tree
 
-    // helper routines with a single call site in parseElement(), newElement() or addSubelement()
+    static  void    annotateElement (Element& element, bool htmlBlockElement = true);
+
+    // helper routines for annotateElement()
+
+    static  void    tidyText (string& content, const string &tag, const bool startOfElement, const bool endOfElement);
+    static  void    checkForPairedTerms (ElementPart& lhs, ElementPart& rhs);
+
+    // simple routines for annotateElement()
 
     inline  bool    endOfSentence (const string& content);
-    inline  bool    startOfSentence (const Element& parent, const string& content);
+    inline  bool    startOfSentence (const Element& parent, const string& content, const size_t index);
     inline  bool    extraNewLine (const Element& parent, const Element &element);
 
     inline  bool    lineBeforeSubElement (const Element& parent, Element& element, const bool htmlBlockElement);
@@ -133,11 +142,13 @@ namespace       Html
 void    Html::parseCribSheet (ifstream &input, Element &element)
 {
     parseElement(input, element);
+
+    annotateElement(element);
 }
 
 //----  parse an html element
 
-void    Html::parseElement (ifstream &input, Element &element, const bool htmlBlockElement)
+void    Html::parseElement (ifstream &input, Element &element)
 {
     string content;
 
@@ -160,11 +171,9 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
         {
             string&     comment = readComment (input, tag, content);
 
-            Element&  subelement = * newElement (input, element, Comment::beg, content);
+            Element&  subelement = * newElement (input, Comment::beg);
 
-            addSubelement(input, element, subelement, content, htmlBlockElement);
-
-            tidyContent(comment, Comment::beg, true, true);
+            addSubelement(input, element, subelement, content);
 
             if (!comment.empty())
                 subelement.contents.push_back(ElementPart (comment));
@@ -185,9 +194,9 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
 
         if (openAndCloseTag(tag))
         {
-            Element&  subelement = * newElement (input, element, tag, content);
+            Element&  subelement = * newElement (input, tag);
 
-            addSubelement(input, element, subelement, content, htmlBlockElement);
+            addSubelement(input, element, subelement, content);
 
             continue;
         }
@@ -196,29 +205,18 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
 
         // open tag followed by a separate close tag - process any nested elements
         {
-            Element&  subelement = * newElement (input, element, tag, content);
+            Element&  subelement = * newElement (input, tag);
 
-            parseElement(input, subelement, htmlBlockElement && element.tag != Markup::para);
+            parseElement(input, subelement);
 
-            addSubelement(input, element, subelement, content, htmlBlockElement);
-
-            checkForPairedTerms(element);
+            addSubelement(input, element, subelement, content);
         }
     }
 
     // element ends with some text
 
-    if (!content.empty())
-    {
-        tidyContent(content, element.tag, element.contents.empty(), true);
-
-        if (!content.empty())
-        {
-            element.endOfSentence = endOfSentence(content);
-
-            element.contents.push_back(ElementPart (content));
-        }
-    }
+    if (content.find_first_not_of(" \n\t") != string::npos)
+        element.contents.push_back(ElementPart (content));
 }
 
 //----------------------------------------------------------------------------//
@@ -229,6 +227,7 @@ void    Html::parseElement (ifstream &input, Element &element, const bool htmlBl
 // They are implemented to cope gracefully with an unexpected end of file.
 //
 // The last routine is a bit of hack.
+//
 //----------------------------------------------------------------------------//
 
 //----  read text upto the next html tag - append to any old content
@@ -299,7 +298,7 @@ void    Html::swallowNewLines (ifstream& input, bool condition)
 
 //----------------------------------------------------------------------------//
 //
-// The two second level routines that do some real work.
+// Routines that create Element and ElementPart objects.
 //
 // newElement() creates a new element and addSubelement() adds the new element
 // to its parent's contents.
@@ -309,41 +308,30 @@ void    Html::swallowNewLines (ifstream& input, bool condition)
 //
 // The side affects on the element contents and the calls to swallowNewLines()
 // logically do not belong here but moving them out would obscure the code in
-// parseElement() and raise 'to do or not to do' questions.
+// parseElement() and raise other 'to do or not to do' questions.
 //
 //----------------------------------------------------------------------------//
 
 //----  parse sub-element that follows an open tag
 
-Html::Element*    Html::newElement (ifstream& input, const Element& parent, const string &tag, string& content)
+Html::Element*    Html::newElement (ifstream& input, const string &tag)
 {
     swallowNewLines (input, tag == Markup::asis || tag == Markup::newl || tag == Comment::beg);
 
-    tidyContent(content, parent.tag, parent.contents.empty(), false);
-
     Element&  element = * (Element *) new Element (tag);
-
-    element.strictOrder     = (parent.strictOrder && tag != Markup::ulst);
-    element.startOfSentence = startOfSentence(parent, content);
-    element.extraNewLine    = extraNewLine(parent, element);
 
     return (&element);
 }
 
 //----  add the new sub-element to its parent's contents
 
-void    Html::addSubelement (ifstream& input, Element& parent, Element& element, string& content, const bool htmlBlockElement)
+void    Html::addSubelement (ifstream& input, Element& parent, Element& element, string& content)
 {
-    const bool  lineBefore = lineBeforeSubElement(parent, element, htmlBlockElement);
-    const bool  lineAfter  = lineAfterSubElement(element);
-
-    parent.endOfSentence   = element.endOfSentence;
-
-    parent.contents.push_back(ElementPart (content, &element, lineBefore, lineAfter));
+    parent.contents.push_back(ElementPart (content, &element));
 
     content.clear();
 
-    swallowNewLines (input, lineAfter);
+    swallowNewLines (input, lineAfterSubElement(element));
 }
 
 //----------------------------------------------------------------------------//
@@ -449,27 +437,73 @@ bool    Html::openAndCloseTag (string &tag)
 
 //----------------------------------------------------------------------------//
 //
-// The two third level routines that do some real work.
+// Annotate and tidy the parse tree.
 //
-// tidyContent() is called in several places to tidy white space in an around
-// the text content of elements (and comments).
-//
-// checkForPairedTerms() looks to see if two terms are paired by a conjunction.
-// If so, the pair will be treated as mini unordered list.
+// This is where policy is applied to the parse tree.  The policy determines
+// how the parse tree is printed.  Think of it as blank lines with attitude.
+// The print routine itself implements no policy.
 //
 //----------------------------------------------------------------------------//
 
-//----  tidy the white space in the text content of html elements
+void    Html::annotateElement (Element& element, bool htmlBlockElement)
+{
+    deque< ElementPart >::iterator  it;
 
-void    Html::tidyContent (string& content, const string &tag, const bool startOfElement, const bool endOfElement)
+    size_t    index;
+    size_t    finalIndex = element.contents.size() - 1;
+
+    for (it = element.contents.begin(), index = 0; it != element.contents.end(); ++it, ++index)
+    {
+        if (!it->text.empty())
+        {
+            tidyText(it->text, element.tag, index == 0, index == finalIndex && ! it->subElement);
+
+            Escapes::replace (it->text);
+        }
+
+        if (it->subElement)
+        {
+            Element&    subElement = *it->subElement;
+
+            subElement.startOfSentence = startOfSentence(element, it->text, index);
+            subElement.extraNewLine    = extraNewLine(element, subElement);
+            subElement.strictOrder     = element.strictOrder && subElement.tag != Markup::ulst;
+
+            it->lineBeforeSubElement = lineBeforeSubElement(element, subElement, htmlBlockElement);
+            it->lineAfterSubElement  = lineAfterSubElement(subElement);
+
+            annotateElement(subElement, htmlBlockElement && element.tag != Markup::para);
+
+            element.endOfSentence = subElement.endOfSentence;
+
+            if (subElement.tag == Markup::item && element.tag == Markup::olst && it->text.empty())
+                it->text = "  ";
+
+            if (index != 0)
+                checkForPairedTerms (*(it - 1), *it);
+        }
+        else
+        {
+            if (index == finalIndex)
+                element.endOfSentence = endOfSentence(it->text);
+        }
+    }
+}
+
+//----------------------------------------------------------------------------//
+//
+// Helper routines for annotateElement().
+//
+//----------------------------------------------------------------------------//
+
+//----  tidy the white space in the text content of html elements (and comments)
+
+void    Html::tidyText (string& content, const string &tag, const bool startOfElement, const bool endOfElement)
 {
     if (content.length() == 0)
         return;
 
     size_t pos;
-
-    if (endOfElement && tag == Markup::item)
-        content += " ";
 
     if (tag != Markup::asis)
     {
@@ -512,32 +546,21 @@ void    Html::tidyContent (string& content, const string &tag, const bool startO
         if (content[pos] == '\n')
             content.erase(pos, 1);
     }
-
-    // convert escaped html characters
-
-    Escapes::replace (content);
 }
 
 //----  check for blankable terms paired by a conjunction
 
-void Html::checkForPairedTerms (Element &element)
+void    Html::checkForPairedTerms (ElementPart& lhs, ElementPart& rhs)
 {
-    const size_t    count = element.contents.size();
-
-    if (count < 2) return;
-
-    const string&   text = element.contents[count - 1].text;
-
     static  const char*     joinText[] = {"/", " and ", " or "};
+
+    if (lhs.subElement == 0 || rhs.subElement == 0) return;
+
+    const string&   text = rhs.text;
 
     for (int ii = 0; ii < 3; ++ii)
         if (text == joinText[ii])
         {
-            ElementPart&    lhs = element.contents[count - 2];
-            ElementPart&    rhs = element.contents[count - 1];
-
-            if (lhs.subElement == 0 || rhs.subElement == 0) return;
-
             lhs.subElement->strictOrder = rhs.subElement->strictOrder = false;
 
             break;
@@ -546,13 +569,12 @@ void Html::checkForPairedTerms (Element &element)
 
 //----------------------------------------------------------------------------//
 //
-// Helper routines with a single call site.
+// Simple helper routines for annotateElement().
 //
-// These routines are used to set 'state' flags in new Element or ElementPart
-// objects.  All return bool.
+// The bool return values of these routines are used to set 'state' flags in
+// Element or ElementPart objects.
 //
-// They become more complex as features are added.  Placing their logic in
-// separate routines with return statements yields a cleaner, clearer
+// Logic in separate routines with return statements yields a cleaner, clearer
 // expression than if the logic were in-line at the call site.
 //
 //----------------------------------------------------------------------------//
@@ -574,7 +596,7 @@ bool    Html::endOfSentence (const string& content)
 
 //----  Will the next element start a sentence ?
 
-bool    Html::startOfSentence (const Element& parent, const string& content)
+bool    Html::startOfSentence (const Element& parent, const string& content, const size_t index)
 {
     const int   len = content.length();
 
@@ -594,11 +616,9 @@ bool    Html::startOfSentence (const Element& parent, const string& content)
         {
             if (content[0] != '/') return (false);
 
-            const size_t    count = parent.contents.size();
+            const ElementPart&    part = parent.contents[index - 1];
 
-            if (count == 0) return (false);
-
-            const ElementPart&    part = parent.contents[count - 1];
+            if (part.subElement == 0) return (false);
 
             return (part.subElement->startOfSentence);
         }
@@ -616,15 +636,18 @@ bool    Html::extraNewLine (const Element& parent, const Element &element)
     if (parent.tag == Markup::olst && element.tag == Markup::item)
         return (true);
 
+    if (element.tag == Markup::para && element.contents.empty())
+        return (true);
+
     return (element.tag == Markup::newl);
 }
 
 //----  Will a nested element merit an blank line before it when printed ?
 
-bool   Html::lineBeforeSubElement (const Element& parent, Element& element, const bool htmlBlockElement)
+bool    Html::lineBeforeSubElement (const Element& parent, Element& element, const bool htmlBlockElement)
 {
     if (element.tag == Markup::para && element.contents.empty())
-        return (element.extraNewLine = true, false);    // not for an empty paragraph
+        return (false);     // not for an empty paragraph
 
     if (element.tag == Markup::asis)
         return (true);      // yes for a code block
@@ -635,13 +658,18 @@ bool   Html::lineBeforeSubElement (const Element& parent, Element& element, cons
         return (false);     // not for a comment
     if (element.tag == Markup::rule)
         return (false);     // not for a header rule
+    if (element.tag == Markup::none)
+        return (false);     // not for a header rule
 
-    return (htmlBlockElement && parent.tag != Markup::para);
+    if (parent.tag == Markup::ulst || parent.tag == Markup::olst)
+        return (false);     // not within a list
+
+   return (htmlBlockElement && parent.tag != Markup::para);
 }
 
 //----  Will a nested element merit an blank line after it when printed ?
 
-bool   Html::lineAfterSubElement (const Element& element)
+bool    Html::lineAfterSubElement (const Element& element)
 {
     return (element.tag == Markup::asis || element.tag == Markup::olst);
 }
@@ -661,7 +689,7 @@ bool   Html::lineAfterSubElement (const Element& element)
 //
 //----------------------------------------------------------------------------//
 
-void  Html::printElement (ostream &stream, const Element& element, string indent)
+void    Html::printElement (ostream &stream, const Element& element, string indent)
 {
     if (verbose)
     {
@@ -679,7 +707,7 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
     {
         if (!it->text.empty())
         {
-            if (lineAfter || (lineBetween && element.tag == Markup::none))
+            if (lineAfter || lineBetween)
                 stream << "\n\n";
 
             if (!element.contentMask.empty())
@@ -688,7 +716,7 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
                 stream << indent << it->text;
 
             lineAfter = false;
-            lineBetween = true;
+            lineBetween = it->lineBeforeSubElement;
         }
 
         if (it->subElement)
@@ -701,31 +729,16 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
             if (lineAfter || lineBetween && it->lineBeforeSubElement)
                 stream << "\n\n";
 
-            if (element.tag == Markup::olst && subElement.tag == Markup::item)
-                if (it->text.empty())
-                    stream << "  ";
+            printElement(stream, subElement, indent);
 
-            printElement (stream, subElement, indent);
-
-            if (subElement.extraNewLine)
-            {
-                deque< ElementPart >::const_iterator  jit;
-
-                for (jit = it + 1; jit != element.contents.end(); ++jit)
-                    if (!jit->subElement || jit->subElement->tag != Comment::beg) break;
-
-                if (jit != element.contents.end())
-                {
+            if (subElement.extraNewLine && (it + 1 != element.contents.end()))
+                if (subElement.endOfSentence)
+                    stream << "\n\n";
+                else
                     stream << "\n";
 
-                    if (element.tag == Markup::olst && subElement.tag == Markup::item)
-                        if (subElement.endOfSentence)
-                            stream << "\n";
-                }
-            }
-
             lineAfter = it->lineAfterSubElement;
-            lineBetween = true;
+            lineBetween = element.tag == Markup::none;
         }
     }
 
@@ -744,7 +757,7 @@ void  Html::printElement (ostream &stream, const Element& element, string indent
 
 //----------------------------------------------------------------------------//
 //
-// One minor task the parser performs while reading a cribsheet is replace
+// One minor task the parser performs while reading a crib sheet is replace
 // html escape sequences with the special characters they represent.
 //
 // The implementation gets the job done.  Other, possibly more efficient, ways

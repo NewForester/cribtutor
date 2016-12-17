@@ -141,11 +141,11 @@ namespace       Html
 
         Element*  subElement;
 
-        ElementPart (const string& text, Element* sub = 0, bool lineBeforeSubElement = false, bool lineAfterSubElement = false) :
-            text (text),
-            lineBeforeSubElement (lineBeforeSubElement),
-            lineAfterSubElement (lineAfterSubElement),
-            subElement (sub)
+        ElementPart (const string& text, Element* sub = 0) :
+        text (text),
+        lineBeforeSubElement (false),
+        lineAfterSubElement (false),
+        subElement (sub)
         {
             if (subElement)
                 subElement->referenceCount++;
