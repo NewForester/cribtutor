@@ -1,0 +1,48 @@
+Test of the Markdown List Workaround
+    Skip [yNq] ? 
+I do not like this web interface. Odd, because while I generally dislike GUIs, I generally like WUIs.
+
+This is a paragraph that contain a list: + one + two + three but this is not interpreted as I would expect.
+
+I have tried converting such lists to html using ____–____ and ____.
+Fill in the blanks:  >> pandoc, python markdown,;
+
+These worthy Mardown to html converters do not recognise the list without the blank lines.
+
+Although the Mardown documentation (I've read several sources) says that a blank line starts a new paragraph, both of the programs mentioned generate lists, they don't generate lists within paragraphs. Perhaps they are forced to do this because markdown talks about paragraphs within lists.
+
+That would be a real problem for crib tutor:
+
+  paragraphs equate to questions: a list must fall within a paragraph to be considered a question
+  paragraphs within lists might 'work' but would not be considered questions in their own right.
+
+I tried a script that uses the GitHub API directly but my OS is too old for the old Ruby dependency. That is my fault. I'm still trying to find the original Perl Mardown interpreter.
+
+One thing is clear on GitHub is that the blank line is required at the end of a paragraph and may be required at the beginning too.
+
+I'm thinking of ____ it as follows:
+Fill in the blanks:  >> hacking,;
+
+one, ____, three,
+Fill in the blanks:  >> two,;
+
+will be ____ as a stand-alone list.
+Fill in the blanks:  >> interpreted,;
+
+But ____ the hack - one, ____, three - adjacent paragraphs will be incorporated.
+Fill in the blanks:  >> without,; two,;
+
+An ordered list test case is required: 
+
+  first,
+  ____,
+  third,
+
+to round off the ____.
+Fill in the blanks:  >> second,; tests,;
+
+A simple test of upping the number of choice when repeating chapters/sections
+
+
+Chapter Choice Test
+    Skip [yNq] ? 

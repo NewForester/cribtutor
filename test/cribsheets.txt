@@ -17,6 +17,7 @@ test6-p.html
 
 blanks.html
 spelling.html
+markdown.html
 choice.html
 shuffle.html
 list-shuffle.html
