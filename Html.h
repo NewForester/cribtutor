@@ -3,7 +3,7 @@
 
 //----------------------------------------------------------------------------//
 //
-// Interface file for the Html namespace class of the cribtutor program.
+// Interface file for the Html namespace of the cribtutor program.
 //
 // The cribtutor program uses html markup in cribsheets to generate quizzes.
 // The program needs some means of recognising and processing this markup.
@@ -18,7 +18,8 @@
 // replaced in the future.
 //
 // It should accept full html documents but this is not guaranteed.  It does
-// recognise tags and content but attributes are discarded.
+// recognise tags and content but attributes (with a single one exception)
+// are discarded.
 //
 // A limited number of tags are handled by the program.  The rest are ignored.
 //
@@ -72,31 +73,39 @@ namespace       Html
 
 //----------------------------------------------------------------------------//
 //
-// The parser uses two structures, Element and ElementPart, to represent an
-// cribsheet.  A cribsheet consists of nested html tags and text content.
+// A cribsheet is an html document (fragment).  It is considered to consist
+// of nested html elements and text content.
 //
-// The Element structure represent an html element with a tag and content.
-// The content is optional and is represented by a sequence of ElementParts.
-//
-// An element part comprises optional text content and an html subelement.
-// Either may be absent but not both.
-//
-// Since html elements may contain other html elements, the structure is
-// recursive and thus involves pointers.  For use with STL containers,
-// the ElementPart class is provided with the four: default constructor,
-// destructor, copy constructor and assignment operator.  A reference
-// count is used to avoid premature deletion of subelements.  This may be
-// replaced with an auto_ptr in the near future.
-//
-// In addition to the reference count, the Element structure has two members
-// that carry state of interest to the Dialogue namespace:
-//    - contentMask - used to blank out terms.
-//    - strictOrder - if true blanks must be filled in strictly in order
-//
-// The other data members are flags that control when the html print routine
-// prints blank lines.  Essentially corner cases are turned into state.
+// Two structures are used to represent this:  Element and ElementPart.  The
+// contents of an element are represented by a sequence of element parts that
+// each comprise text (optional) and a subelement (also optional).
 //
 // See Html.cpp for details of their use.
+//
+//----------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------//
+//
+// The Element structure represents an html element with a tag and content.
+// The content is optional and is represented by a sequence of ElementParts.
+//
+// An element has a reference count used to prevent premature destruction
+// during STL copy operations.
+//
+// An element carries state set during the annotation of the parse tree.  All
+// but the contentMask do not change once set.  Of these, all but strictOrder
+// are only used by printElement().
+//
+// The contentMask is used by printElement() to blank out terms.  It is set
+// and reset by routines in the Dialogue namespace.
+//
+// The strictOrder flag enables the Dialogue namespace to distinguish terms
+// that must be entered in order relative to adjacent terms from terms in
+// unordered (mini) lists that may be entered in any order relative to other
+// terms in the list.
+//
+// The other data members are flags that control when printElement() prints
+// new lines.  Essentially corner cases are turned into state.
 //
 //----------------------------------------------------------------------------//
 
@@ -143,6 +152,24 @@ namespace       Html
         }
     };
 };
+
+//----------------------------------------------------------------------------//
+//
+// The ElementPart structure comprises a text string and an html subelement.
+// Either may be absent but not both.
+//
+// The subelement is modelled by a pointer to an Element structure thus
+// modelling the nested html element structure by indirect recursion.
+//
+// ElementPart is provided with the four for use with STL containers:
+// default constructor, destructor, copy constructor and assignment operator.
+// The reference count in the subelement Element structure is used to ensure
+// destruction of subelement only when appropriate (not during STL copies).
+//
+// The other data members are flags that control when printElement() prints
+// new lines.  Essentially corner cases are turned into state.
+//
+//----------------------------------------------------------------------------//
 
 namespace       Html
 {

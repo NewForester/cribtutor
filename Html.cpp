@@ -34,19 +34,12 @@ using namespace std;
 // See Html.h for a description of the class interface and data structures.
 //
 // The html namespace offers two external routines, one to parse the html in
-// a crib sheet file and another to print elements the resultant parse tree.
+// a cribsheet file and another to print elements the resultant parse tree.
 //
-// The main parse routine is in two halves.
+// The routines handle nested elements by recursion.
 //
-// The first half implements the mechanics of building the parse tree from
-// the html file.
-//
-// The second half implements policy:  when should be new lines be output by
-// the print routine.
-//
-// The print routine itself implements no policy.
-//
-// All three have a recursive design to handle the nesting of html elements.
+// The many helper routines hide ugly details to keep the principal routines
+// simple.  Most have a single call site.
 //
 //----------------------------------------------------------------------------//
 
@@ -117,17 +110,17 @@ namespace       Html
 
 //----------------------------------------------------------------------------//
 //
-// The main routine of the html parser.
+// The external routine of the html parser hides from the caller that the
+// parsing is a three pass process.
 //
-// The parser is procedural and handles nested elements by recursion.
+// The first pass reads the html file and parses the contents in a mechanical
+// fashion.
 //
-// To keep the main routine short and clear, much of the ugly details are in
-// helper routines, many with a single call site.
+// The final pass annotates the parse tree with indications to printElement()
+// of how the elements are to be printed.
 //
-// The parser handles three distinct cases:
-//      - html comments (that may comment out other html elements)
-//      - open and close tags (with, by definition, no nested elements)
-//      - open tags and close tags, possibly separated by nested elements
+// The intermediary pass is a hook that allows for the parse tree to be
+// altered in any manner that may be necessary or desirable.
 //
 //----------------------------------------------------------------------------//
 
@@ -140,7 +133,16 @@ void    Html::parseCribSheet (ifstream &input, Element &element)
     annotateElement(element);
 }
 
-//----  parse an html element
+//----------------------------------------------------------------------------//
+//
+// Read and parse the cribsheet file - the first pass of the parse operation.
+//
+// The parser handles three distinct cases:
+//      - html comments (that may comment out other html elements)
+//      - open and close tags (with, by definition, no nested elements)
+//      - open tags and close tags, possibly separated by nested elements
+//
+//----------------------------------------------------------------------------//
 
 void    Html::parseElement (ifstream &input, Element &element)
 {
@@ -217,8 +219,8 @@ void    Html::parseElement (ifstream &input, Element &element)
 //
 // The routines that actually read from the input.
 //
-// All but the last have a single call site in the main parse routine.
-// They are implemented to cope gracefully with an unexpected end of file.
+// All but the last have a single call site in parseElement().  They are
+// implemented to cope gracefully with an unexpected end of file.
 //
 // The last routine is a bit of hack.
 //
@@ -300,9 +302,9 @@ void    Html::swallowNewLines (ifstream& input, bool condition)
 // There are two routines because there are cases where, in between, parsing
 // of nested elements is appropriate and other cases where it is not required.
 //
-// The side affects on the element contents and the calls to swallowNewLines()
-// logically do not belong here but moving them out would obscure the code in
-// parseElement() and raise other 'to do or not to do' questions.
+// The calls to swallowNewLines() logically do not belong here but moving them
+// out would obscure the code in parseElement() and raise other 'to do or not
+// to do' questions.
 //
 //----------------------------------------------------------------------------//
 
@@ -431,7 +433,7 @@ bool    Html::openAndCloseTag (string &tag)
 
 //----------------------------------------------------------------------------//
 //
-// Annotate and tidy the parse tree.
+// Annotate and tidy the parse tree - the third pass of the parse operation.
 //
 // This is where policy is applied to the parse tree.  The policy determines
 // how the parse tree is printed.  Think of it as blank lines with attitude.
@@ -751,7 +753,7 @@ void    Html::printElement (ostream &stream, const Element& element, string inde
 
 //----------------------------------------------------------------------------//
 //
-// One minor task the parser performs while reading a crib sheet is replace
+// One minor task the parser performs while reading a cribsheet is to replace
 // html escape sequences with the special characters they represent.
 //
 // The implementation gets the job done.  Other, possibly more efficient, ways

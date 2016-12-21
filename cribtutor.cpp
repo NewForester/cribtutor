@@ -2,7 +2,7 @@
 //
 // The cribtutor program is pedagogic.
 //
-// It generates fill-in-the-blanks quizzes from crib sheets.  The crib sheets
+// It generates fill-in-the-blanks quizzes from cribsheets.  The cribsheets
 // are expressed in a subset of html but the program has only a simple command
 // line interface, not a web interface.
 //
@@ -10,8 +10,8 @@
 // the global variables set from the command line arguments and the top level
 // routine cribSheetQuiz().
 //
-// main() processes a file that lists the crib sheets.  cribSheetQuiz()
-// processes crib sheets one at a time.  It opens the crib sheet but delegates
+// main() processes a file that lists the cribsheets.  cribSheetQuiz()
+// processes cribsheets one at a time.  It opens the cribsheet but delegates
 // parsing to Html::parseCribSheet() and running the quiz to Quiz::run().
 //
 // See Html.h and Quiz.h for details.
@@ -70,7 +70,7 @@ int     main (int argc, char* argv[])
 {
     processArguments (argc, argv);
 
-    // open the (external) list of crib sheets
+    // open the (external) list of cribsheets
 
     string      pathName (cribSheetDirectory + cribSheets);
 
@@ -82,24 +82,24 @@ int     main (int argc, char* argv[])
         return (1);
     }
 
-    // process the list of crib sheets
+    // process the list of cribsheets
 
     bool    fastForward = !beginsWith.empty();
 
     do
     {
-        // get next crib sheet pathname
+        // get next cribsheet pathname
 
         getCribsheetName(sheets, pathName);
 
         if (pathName.empty()) continue;
 
-        // fast forward to the first crib sheet whose name begins with beginsWith
+        // fast forward to the first cribsheet whose name begins with beginsWith
 
         if (fastForward)
             fastForward = (file(pathName).compare(0, beginsWith.size(), beginsWith) != 0);
 
-        // process crib sheets one by one
+        // process cribsheets one by one
 
         if (!fastForward)
             cribSheetQuiz(cribSheetDirectory + pathName, choices);
@@ -124,11 +124,11 @@ int     main (int argc, char* argv[])
 //
 //----------------------------------------------------------------------------//
 
-//----  do a crib sheet based quiz
+//----  do a cribsheet based quiz
 
 void    cribSheetQuiz (const string& pathName, int choices)
 {
-    // open the crib sheet
+    // open the cribsheet
 
     ifstream    cribSheet (pathName.c_str(), ios_base::in);
 
@@ -138,7 +138,7 @@ void    cribSheetQuiz (const string& pathName, int choices)
          return;
     }
 
-    // read and parse the crib sheet
+    // read and parse the cribsheet
 
     Html::Element   html;
 
@@ -272,7 +272,7 @@ void    processArguments (int argc, char* argv[])
         }
     }
 
-    // normalise the crib sheet path
+    // normalise the cribsheet path
 
     cribSheetDirectory = normalise (directory(argv[0]) + cribSheetDirectory + "/");
 }
