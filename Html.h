@@ -128,8 +128,24 @@ namespace       Html
             startOfSentence (false),
             extraNewLine (false)
             {}
-    };
 
+        Element&    merge (Html::Element& rhs)
+        {
+            while (rhs.contents.size())
+            {
+                this->contents.push_back(rhs.contents.front());
+                rhs.contents.pop_front();
+            }
+
+            const_cast <string&> (rhs.tag) = Html::Markup::none;
+
+            return (*this);
+        }
+    };
+};
+
+namespace       Html
+{
     // a representation of part of an html element comprising a tag and a subelement
 
     struct      ElementPart
@@ -143,6 +159,15 @@ namespace       Html
 
         ElementPart (const string& text, Element* sub = 0) :
         text (text),
+        lineBeforeSubElement (false),
+        lineAfterSubElement (false),
+        subElement (sub)
+        {
+            if (subElement)
+                subElement->referenceCount++;
+        }
+
+        ElementPart (Element* sub) :
         lineBeforeSubElement (false),
         lineAfterSubElement (false),
         subElement (sub)
@@ -175,6 +200,21 @@ namespace       Html
 
             return (*this);
         }
+    };
+};
+
+//----------------------------------------------------------------------------//
+//
+// The Html::Escapes namespace encapsulates the substitution of html escape
+// sequences (&apos etc.).
+//
+//----------------------------------------------------------------------------//
+
+namespace       Html
+{
+    namespace   Escapes
+    {
+        string& replace (string &statement);
     };
 };
 

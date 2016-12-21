@@ -19,6 +19,7 @@
 //----------------------------------------------------------------------------//
 
 #include "Html.h"
+#include "Massage.h"
 
 #include <cctype>
 
@@ -112,15 +113,6 @@ namespace       Html
     // for debug of printElement() only
 
   /* global */ bool verbose = false;
-
-    //------
-
-    // encapsulate the substitution of html escape sequences
-
-    namespace   Escapes
-    {
-        static  string& replace (string &statement);
-    };
 };
 
 //----------------------------------------------------------------------------//
@@ -142,6 +134,8 @@ namespace       Html
 void    Html::parseCribSheet (ifstream &input, Element &element)
 {
     parseElement(input, element);
+
+    massageElement(element);
 
     annotateElement(element);
 }
