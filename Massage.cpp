@@ -26,8 +26,23 @@
 //----------------------------------------------------------------------------//
 
 #include "Massage.h"
+#include <iostream>
 
 using namespace std;
+
+//----------------------------------------------------------------------------//
+//
+// Two helper routines to test:
+// - whether an element start with a given subelement
+// - whether an element ends with a given subelement
+//
+//----------------------------------------------------------------------------//
+
+namespace       Html
+{
+    bool    startsWithSubElement (const Element* element, const string& tag);
+    bool    endsWithSubElement (const Element* element, const string& tag);
+};
 
 //----------------------------------------------------------------------------//
 //
@@ -51,12 +66,12 @@ void    Html::massageElement (Element& element)
 //
 // The massageLists() routine compensates by:
 //   - enclosing a list element found at the top level in a (new) paragraph
-//   - merging the paragraphs either side with new paragraph
-//   - unless this end/start with <p />
+//   - merging the paragraphs either side with the new paragraph
+//   - unless they end/start with a comment
 // This massaging yields the expected cribtutor form by default while allowing
 // the merging to be turned off explicitly when required.
 //
-// It is acknowledged that 'top level' is inadequate.
+// Here 'top level' means at the same level as headers and paragraphs.
 //
 //----------------------------------------------------------------------------//
 
@@ -86,57 +101,96 @@ void    Html::Markdown::massageLists (Element& element)
 
         it->subElement = newParagraph;
 
-        // is there a paragraph after >
+        // is there a paragraph after that does not start with a comment ?
 
         if (it != element.contents.end())
         {
             Element*    after = (it + 1)->subElement;
 
-            if (after && after->tag == Markup::para)
+            if (!startsWithSubElement(after, Comment::beg))
             {
-                string& text = after->contents.begin()->text;
+                if (tag == Markup::ulst)
+                    after->contents.begin()->text.insert(0," ");
 
-                Escapes::replace(text);
+                newParagraph->merge(*after);
 
-                if (text.substr(0,5) == "<p />")
-                {
-                    text.erase(0,5);
-                }
-                else
-                {
-                    if (tag == Markup::ulst)
-                        text.insert(0," ");
+                int     index = it - element.contents.begin();
 
-                    newParagraph->merge(*after);
-                }
+                element.contents.erase(it + 1);
+
+                it = element.contents.begin() + index;
             }
         }
 
-        // is there a paragraph before ?
+        // is there a paragraph before that does not end with a comment ?
 
         if (it != element.contents.begin())
         {
             Element*    before = (it - 1)->subElement;
 
-            if (before && before->tag == Markup::para)
+            if (!endsWithSubElement(before, Comment::beg))
             {
-                string& text = (before->contents.end() - 1)->text;
+                newParagraph->contents.begin()->text += " ";
 
-                Escapes::replace(text);
+                before->merge(*newParagraph);
 
-                if (text.substr(text.length() - 5) == "<p />")
-                {
-                    text.erase(text.length() - 5);
-                }
-                else
-                {
-                    newParagraph->contents.begin()->text += " ";
+                int     index = it - element.contents.begin() - 1;
 
-                    before->merge(*newParagraph);
-                }
+                element.contents.erase(it);
+
+                it = element.contents.begin() + index;
             }
         }
     }
+}
+
+//----------------------------------------------------------------------------//
+//
+// Two helper routines to test:
+// - whether an element start with a given subelement
+// - whether an element ends with a given subelement
+//
+//----------------------------------------------------------------------------//
+
+// test whether an element start with a given subelement
+
+bool    Html::startsWithSubElement (const Element* element, const string& tag)
+{
+    if (!element || element->tag != Markup::para)
+        return (true);
+
+    size_t    parts = element->contents.size();
+
+    if (parts == 0)
+        return (false);
+
+    const ElementPart&    firstPart = element->contents[0];
+
+    if (firstPart.subElement && firstPart.subElement->tag == tag)
+        if (firstPart.text.empty())
+            return (true);
+
+    return (false);
+}
+
+// test whether an element ends with a given subelement
+
+bool    Html::endsWithSubElement (const Element* element, const string& tag)
+{
+    if (!element || element->tag != Markup::para)
+        return (true);
+
+    size_t    parts = element->contents.size();
+
+    if (parts == 0)
+        return (false);
+
+    const ElementPart&    lastPart = element->contents[parts - 1];
+
+    if (lastPart.subElement && lastPart.subElement->tag == tag)
+        return (true);
+
+    return (false);
 }
 
 // EOF

@@ -232,21 +232,6 @@ namespace       Html
 
 //----------------------------------------------------------------------------//
 //
-// The Html::Escapes namespace encapsulates the substitution of html escape
-// sequences (&apos etc.).
-//
-//----------------------------------------------------------------------------//
-
-namespace       Html
-{
-    namespace   Escapes
-    {
-        string& replace (string &statement);
-    };
-};
-
-//----------------------------------------------------------------------------//
-//
 // There are but two interface routines, operator<< for the Element class and
 // Html::parseCribSheet().  The latter is passed:
 //    - input - file handle open at the beginning of the cribsheet file

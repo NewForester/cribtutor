@@ -110,6 +110,21 @@ namespace       Html
 
 //----------------------------------------------------------------------------//
 //
+// The Html::Escapes namespace encapsulates the substitution of html escape
+// sequences (&apos etc.).
+//
+//----------------------------------------------------------------------------//
+
+namespace       Html
+{
+    namespace   Escapes
+    {
+        string& replace (string &statement);
+    };
+};
+
+//----------------------------------------------------------------------------//
+//
 // The external routine of the html parser hides from the caller that the
 // parsing is a three pass process.
 //
@@ -448,13 +463,17 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
     size_t    index;
     size_t    finalIndex = element.contents.size() - 1;
 
+    bool      startOfElement = true;
+
     for (it = element.contents.begin(), index = 0; it != element.contents.end(); ++it, ++index)
     {
         if (!it->text.empty())
         {
-            tidyText(it->text, element.tag, index == 0, index == finalIndex && ! it->subElement);
+            tidyText(it->text, element.tag, startOfElement, index == finalIndex && ! it->subElement);
 
             Escapes::replace (it->text);
+
+            startOfElement = false;
         }
 
         if (it->subElement)
@@ -477,6 +496,9 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
             if (index != 0)
                 checkForPairedTerms (*(it - 1), *it);
+
+            if (subElement.tag != Comment::beg)
+                startOfElement = false;
         }
         else
         {

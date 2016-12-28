@@ -5,20 +5,22 @@
 <p>I have tried converting such lists to html using <em>python-markdown</em> and <em>pandoc</em>.</p>
 <p>These worthy Mardown to html converters do not recognise the list without the blank lines.</p>
 <p>Although the Mardown documentation (I've read several sources) says that a blank line starts a new paragraph, both of the programs mentioned generate lists, they don't generate lists within paragraphs. Perhaps they are forced to do this because markdown talks about paragraphs within lists.</p>
-<p>That would be a real problem for crib tutor:&lt;p /&gt;</p>
+<p>That would be a real problem for crib tutor:
+<!-- --></p>
 <ol style="list-style-type: decimal">
 <li>paragraphs equate to questions: a list must fall within a paragraph to be considered a question</li>
 <li>paragraphs within lists might 'work' but would not be considered questions in their own right.</li>
 </ol>
-<p>&lt;p /&gt;I tried a script that uses the GitHub API directly but my OS is too old for the old Ruby dependency. That is my fault. I'm still trying to find the original Perl Mardown interpreter.</p>
+<p><!-- -->
+I tried a script that uses the GitHub API directly but my OS is too old for the old Ruby dependency. That is my fault. I'm still trying to find the original Perl Mardown interpreter.</p>
 <p>One thing is clear on GitHub is that the blank line is required at the end of a paragraph and may be required at the beginning too.</p>
-<p>I'm thinking of <em>hacking</em> it as follows: &lt;p /&gt;</p>
+<p>I'm thinking of <em>hacking</em> it as follows:<!-- --></p>
 <ul>
 <li>one,</li>
 <li><em>two</em>,</li>
 <li>three,</li>
 </ul>
-<p>&lt;p /&gt; will be <em>interpreted</em> as a stand-alone list.</p>
+<p><!-- -->will be <em>interpreted</em> as a stand-alone list.</p>
 <p>But <em>without</em> the hack -</p>
 <ul>
 <li>one,</li>

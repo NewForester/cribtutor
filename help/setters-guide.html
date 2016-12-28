@@ -73,7 +73,7 @@ The program recognises, but ignores &lt;hr&gt;.
 </p><p>
 The program recognises html comments (&lt;!-- ... --&gt;) anywhere.
 They may be used (temporarily) to comment out other html elements.
-Comments are used to direct the behaviour of the program in two particular circumstances.
+Comments are used to direct the behaviour of the program in several particular circumstances.
 Comments are not output by the program.
 </p><p>
 The program ignores element attributes
@@ -591,7 +591,7 @@ To illustrate, consider:
 
     but home is best.
 </pre>
-The blank lines either side of the list are required otherwise Markdown and translators do not recognise the list at all.
+The blank lines either side of the list are required otherwise Markdown and translators do not recognise the list as a list.
 The translators generate a list that is not within a paragraph, so cribtutor, without compensation, would ignore the list.
 </p>
 <p>
@@ -606,23 +606,25 @@ The program compensates by:
 The effect is to treat the example above as one paragraph and thus one quiz question.
 </p>
 <p>
-Whenever you do not want the following/preceding paragraph to be merged, begin/end it with:
+Whenever you do not want the following/preceding paragraph to be merged, begin/end it with a comment:
 <pre>
-    \&lt;p /&gt;
+    &lt;!-- --&gt;
 </pre>
-which the program will strip out.
+will do nicely.
 </p>
 <p>
 For example, the following will be considered three separate paragraphs:
 <pre>
-    The cardinal points are.\&lt;p /&gt;
+    The cardinal points are.
+    &lt;!-- --&gt;
 
       * _north_,
       * _south_,
       * _east_ and
       * _west_
 
-    \&lt;p /&gt;But home is best.
+    &lt;!-- --&gt;
+    But home is best.
 </pre>
 </p>
 
