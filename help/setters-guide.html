@@ -562,7 +562,7 @@ Perhaps &lt;/me&gt; instead of &lt;/em&gt;.
 
 <p>
 Html describes how to render a web-page.  It is not a very convenient format for writing web-page contents.
-Wikis provide mark-up languages geared toward writing contents and translate the mark-up into html for rendering.
+Wikis provide mark-up languages geared toward writing content and translate the mark-up into html for rendering.
 </p>
 <p>
 One such language is Markdown.
@@ -571,12 +571,17 @@ There are several translators that will convert text with Markdown mark-up into 
 </p>
 <p>
 Writing crib sheets using a wiki mark-up and using a translator can avoid a lot of tedious editing time.
-With Markdown there is one small snag.
+With Markdown there is a small snag.
 </p>
 <p>
-Cribtutor considers a list to be part of a question, which means the program expects each html list element to be a sub element of a paragraph element.
-This is not what Markdown translators generate since Markdown allows list items to comprise one or more paragraphs.
-It is a trade-off between simplicity and flexibility that does not suit the cribtutor application.
+Cribtutor considers a list to be part of a question.
+This means the program expects each html list element to be a sub element of a paragraph element.
+The same is true of pre-formatted text (such as code blocks).
+</p>
+<p>
+This is not what Markdown translators generate.
+List elements and pre-formatted text are block elements equal to paragraphs.
+This is, in part, because Markdown supports list items that comprise one or more paragraphs and code blocks.
 </p>
 <p>
 The cribtutor program compensates but sometimes you may not want this.
@@ -592,7 +597,7 @@ To illustrate, consider:
     but home is best.
 </pre>
 The blank lines either side of the list are required otherwise Markdown and translators do not recognise the list as a list.
-The translators generate a list that is not within a paragraph, so cribtutor, without compensation, would ignore the list.
+The translators generate a list that is not within a paragraph, so cribtutor, without compensation, would simply ignore the list.
 </p>
 <p>
 The program compensates by:
@@ -606,7 +611,7 @@ The program compensates by:
 The effect is to treat the example above as one paragraph and thus one quiz question.
 </p>
 <p>
-Whenever you do not want the following/preceding paragraph to be merged, begin/end it with a comment:
+Whenever you do not want the following/preceding paragraph to be merged, begin/end it with a comment.
 <pre>
     &lt;!-- --&gt;
 </pre>
@@ -626,6 +631,9 @@ For example, the following will be considered three separate paragraphs:
     &lt;!-- --&gt;
     But home is best.
 </pre>
+</p>
+<p>
+The compensation and use of comments to prevent it applies to unordered (bullet) lists, ordered (numbered) lists and pre-formatted text (code blocks).
 </p>
 
 

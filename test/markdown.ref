@@ -41,6 +41,19 @@ An ordered list test case is required:
 to round off the ____.
 Fill in the blanks:  >> second,; tests,;
 
+Also a ____ ____ test: 
+
+    #include    <stdio.h>
+    
+    int main (int argc, char* argv [])
+    {
+        printf ("Hello World!\n");
+        return (0);
+    }
+
+to make absolutely certain.
+Fill in the blanks:  >> code block,;
+
 A simple test of upping the number of choice when repeating chapters/sections
 
 
