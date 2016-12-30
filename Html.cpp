@@ -523,7 +523,7 @@ void    Html::tidyText (string& content, const string &tag, const bool startOfEl
 
     size_t pos;
 
-    if (tag != Markup::asis)
+    if (tag != Markup::asis && tag != Markup::asis + Markup::code)
     {
         // convert new lines to spaces
 
@@ -563,6 +563,14 @@ void    Html::tidyText (string& content, const string &tag, const bool startOfEl
         pos = content.length() - 1;
         if (content[pos] == '\n')
             content.erase(pos, 1);
+
+        if (tag == Markup::asis + Markup::code)
+        {
+            content.insert(0,"    ");
+
+            for (pos = content.find("\n"); pos != string::npos; pos = content.find("\n",pos))
+                content.insert(++pos,"    ");
+        }
     }
 }
 

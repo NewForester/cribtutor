@@ -50,6 +50,7 @@ namespace   Html
     namespace   Markdown
     {
         void    massageAsisLists (Element& element);
+        void    massageCodeElements (Element& parent);
     };
 };
 
@@ -76,6 +77,7 @@ namespace       Html
 void    Html::massageElement (Element& element)
 {
     Markdown::massageAsisLists (element);
+    Markdown::massageCodeElements (element);
 }
 
 //----------------------------------------------------------------------------//
@@ -164,6 +166,37 @@ void    Html::Markdown::massageAsisLists (Element& element)
                 it = element.contents.begin() + index;
             }
         }
+    }
+}
+
+//----------------------------------------------------------------------------//
+//
+// For code blocks, the Markdown syntax is one indent level, which it drops.
+// Cribtutor restores this dropped indent in Html::tidyText().
+//
+// For code blocks, Markdown generates <pre><code> ... </code></pre> but
+// Html::tidyText() only knows about one tag, not two.
+//
+// The minimal disruption principle say not to change the calling sequence to 
+// Html::tidyText().  So, instead, this routine alters the <code> tag by
+// concatenation to <pre><code> and Html::tidyText() is able to act on this
+// to restore the indent in a safe and isolated manner.
+//
+//----------------------------------------------------------------------------//
+
+void    Html::Markdown::massageCodeElements (Element& parent)
+{
+    for (ContentsIterator it = parent.contents.begin(); it != parent.contents.end(); ++it)
+    {
+        if (it->subElement == 0)
+            continue;
+
+        Html::Element&    element = *it->subElement;
+
+        if (element.tag != Markup::code || parent.tag != Markup::asis)
+            massageCodeElements(element);
+        else if (it == parent.contents.begin() && it->text.empty())
+            const_cast <string&> (element.tag) = Markup::asis + Markup::code;
     }
 }
 
