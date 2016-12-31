@@ -47,19 +47,19 @@ namespace       Html
 {
     // the main routine of the html parser
 
-    static  void    parseElement (ifstream& input, Element &element);
+    static  void    parseElement (istream& input, Element &element);
 
     // the routines that actually read from the input.
 
-    static  string& readToNextTag  (ifstream& input, string &content);
-    static  string& readTag        (ifstream& input, string &tag, string &content, const string &endTag);
-    static  string& readComment    (ifstream& input, string &comment, const string& content);
-    inline  void    swallowNewLines(ifstream& input, bool condition);
+    static  string& readToNextTag  (istream& input, string &content);
+    static  string& readTag        (istream& input, string &tag, string &content, const string &endTag);
+    static  string& readComment    (istream& input, string &comment, const string& content);
+    inline  void    swallowNewLines(istream& input, bool condition);
 
     // routines that create Element and ElementPart objects
 
-    static  Element*    newElement (ifstream& input, const string &tag);
-    static  void    addSubelement (ifstream& input, Element& parent, Element& element, string& content);
+    static  Element*    newElement (istream& input, const string &tag);
+    static  void    addSubelement (istream& input, Element& parent, Element& element, string& content);
 
     // helper routines with a single call site in parseElement()
 
@@ -159,7 +159,7 @@ void    Html::parseCribSheet (ifstream &input, Element &element)
 //
 //----------------------------------------------------------------------------//
 
-void    Html::parseElement (ifstream &input, Element &element)
+void    Html::parseElement (istream &input, Element &element)
 {
     string content;
 
@@ -243,7 +243,7 @@ void    Html::parseElement (ifstream &input, Element &element)
 
 //----  read text upto the next html tag - append to any old content
 
-string& Html::readToNextTag (ifstream& input, string &content)
+string& Html::readToNextTag (istream& input, string &content)
 {
     string  buffer;
 
@@ -259,7 +259,7 @@ string& Html::readToNextTag (ifstream& input, string &content)
 
 //----  read an html tag
 
-string& Html::readTag (ifstream& input, string &tag, string &content, const string &endTag)
+string& Html::readTag (istream& input, string &tag, string &content, const string &endTag)
 {
     getline(input, tag, '>');
 
@@ -273,7 +273,7 @@ string& Html::readTag (ifstream& input, string &tag, string &content, const stri
 
 //----  read an html comment element and discard its tags
 
-string& Html::readComment (ifstream& input, string &comment, const string& content)
+string& Html::readComment (istream& input, string &comment, const string& content)
 {
     comment.erase(0,Comment::beg.length());
 
@@ -300,7 +300,7 @@ string& Html::readComment (ifstream& input, string &comment, const string& conte
 
 //----  discard new lines from the input when condition is true
 
-void    Html::swallowNewLines (ifstream& input, bool condition)
+void    Html::swallowNewLines (istream& input, bool condition)
 {
     if (condition)
         while (!input.eof() && input.peek() == '\n')
@@ -325,7 +325,7 @@ void    Html::swallowNewLines (ifstream& input, bool condition)
 
 //----  parse sub-element that follows an open tag
 
-Html::Element*    Html::newElement (ifstream& input, const string &tag)
+Html::Element*    Html::newElement (istream& input, const string &tag)
 {
     swallowNewLines (input, tag == Markup::asis || tag == Markup::newl || tag == Comment::beg);
 
@@ -336,7 +336,7 @@ Html::Element*    Html::newElement (ifstream& input, const string &tag)
 
 //----  add the new sub-element to its parent's contents
 
-void    Html::addSubelement (ifstream& input, Element& parent, Element& element, string& content)
+void    Html::addSubelement (istream& input, Element& parent, Element& element, string& content)
 {
     parent.contents.push_back(ElementPart (content, &element));
 
@@ -693,7 +693,7 @@ bool    Html::lineBeforeSubElement (const Element& parent, Element& element, con
    return (htmlBlockElement && parent.tag != Markup::para);
 }
 
-//----  Will a nested element merit an blank line after it when printed ?
+//----  Will a nested element merit a blank line after it when printed ?
 
 bool    Html::lineAfterSubElement (const Element& element)
 {
