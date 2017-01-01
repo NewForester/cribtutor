@@ -1,4 +1,6 @@
-<h1> Test of the Markdown List Workaround </h1>
+<h1> Test of the Workarounds for Markdown </h1>
+
+<h2> Test of Lists and Code Blocks </h2>
 
 <p>I do not like this web interface. Odd, because while I generally dislike GUIs, I generally like WUIs.</p>
 <p>This is a paragraph that contain a list: + one + two + three but this is not interpreted as I would expect.</p>
@@ -44,3 +46,53 @@ int main (int argc, char* argv [])
     return (0);
 }</code></pre>
 <p>to make absolutely certain.</p>
+
+
+<h2> Code Span Tests </h2>
+
+<p>
+Here is a <em>simple</em> <code>code span</code> example.
+</p>
+
+<p>
+Now for an example of embedded terms that have been translated: <code><em>code span</em></code>
+</p>
+<p>
+Another example: <code>Eg <em>code span</em> QED</code>
+</p>
+<p>
+Another example: <code><em>code</em> span</code>
+</p>
+<p>
+Another example: <code>code <em>span</em></code>
+</p>
+<p>
+Another example: <code><em>code</em>/<em>span</em></code>
+</p>
+
+<p>
+Examples using imperfect `pandoc` translation: <code>*code span*</code>
+</p>
+<p>
+Another example: <code>Eg _code_ *span* QED</code>
+</p>
+<p>
+Another example: <code>**code** _span_</code>
+</p>
+<p>
+Another example: <code>**_code span_**</code>
+</p>
+<p>
+Another example: <code>big*hungry*giant</code>
+</p>
+
+<p>
+<em>Start</em> of sentence capitalisation should work inside a code span.  <em>Hello</em> world.
+</p>
+<p>
+<code><em>Start</em></code> of sentence capitalisation should work inside a code span.  <code><em>Hello</em></code> world.
+</p>
+
+<p>
+Mini-list pairs should work with code spans:  <code><em>asterisk</em></code> or <code><em>underscore</em></code>.
+</p>

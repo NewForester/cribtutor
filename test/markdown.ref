@@ -1,4 +1,7 @@
-Test of the Markdown List Workaround
+Test of the Workarounds for Markdown
+    Skip [yNq] ? 
+
+Test of Lists and Code Blocks
     Skip [yNq] ? 
 I do not like this web interface. Odd, because while I generally dislike GUIs, I generally like WUIs.
 
@@ -54,8 +57,54 @@ Also a ____ ____ test:
 to make absolutely certain.
 Fill in the blanks:  >> code block,;
 
-A simple test of upping the number of choice when repeating chapters/sections
 
+Test of Lists and Code Blocks
+    Repeat [yNq] ? 
 
-Chapter Choice Test
+Code Span Tests
     Skip [yNq] ? 
+Here is a ____ `code span` example.
+Fill in the blanks:  >> simple,;
+
+Now for an example of embedded terms that have been translated: `____ ____`
+Fill in the blanks:  >> code span,;
+
+Another example: `Eg ____ ____ QED`
+Fill in the blanks:  >> code span,;
+
+Another example: `____ span`
+Fill in the blanks:  >> code,;
+
+Another example: `code ____`
+Fill in the blanks:  >> span,;
+
+Another example: `____/____`
+Fill in the blanks:  >> code, span,;
+
+Examples using imperfect `pandoc` translation: `____ ____`
+Fill in the blanks:  >> code span,;
+
+Another example: `Eg ____ ____ QED`
+Fill in the blanks:  >> code,; span,;
+
+Another example: `**code** ____`
+Fill in the blanks:  >> span,;
+
+Another example: `**____ ____**`
+Fill in the blanks:  >> code span,;
+
+Another example: `big____giant`
+Fill in the blanks:  >> hungry,;
+
+____ of sentence capitalisation should work inside a code span. ____ world.
+Fill in the blanks:  >> start,; hello,;
+
+`____` of sentence capitalisation should work inside a code span. `____` world.
+Fill in the blanks:  >> start,; hello,;
+
+Mini-list pairs should work with code spans: `____` or `____`.
+Fill in the blanks:  >> asterisk, underscore,;
+
+
+Code Span Tests
+    Repeat [yNq] ? 
