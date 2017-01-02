@@ -51,6 +51,8 @@ namespace   Html
     {
         void    massageAsisLists (Element& element);
         void    massageCodeElements (Element& parent);
+
+        void    fixupCodeSpans (Element& parent);
     };
 };
 
@@ -177,10 +179,13 @@ void    Html::Markdown::massageAsisLists (Element& element)
 // For code blocks, Markdown generates <pre><code> ... </code></pre> but
 // Html::tidyText() only knows about one tag, not two.
 //
-// The minimal disruption principle say not to change the calling sequence to 
+// The minimal disruption principle say not to change the calling sequence to
 // Html::tidyText().  So, instead, this routine alters the <code> tag by
 // concatenation to <pre><code> and Html::tidyText() is able to act on this
 // to restore the indent in a safe and isolated manner.
+//
+// This routine is recursive, so by calling FixupCodeSpans() the fixup is
+// propagated throughout the parse tree.
 //
 //----------------------------------------------------------------------------//
 
@@ -198,6 +203,32 @@ void    Html::Markdown::massageCodeElements (Element& parent)
         else if (it == parent.contents.begin() && it->text.empty())
             const_cast <string&> (element.tag) = Markup::asis + Markup::code;
     }
+
+    if (parent.tag == Markup::code && !parent.contents.empty())
+        fixupCodeSpans(parent);
+}
+
+//----------------------------------------------------------------------------//
+//
+// The cribtutor program has no use for <code> elements and ignores them.  It
+// also renders apostrophe (tick) and grave (back tick) characters allowing
+// for the quoting of words or phrases of significance without blanking them.
+//
+// Markdown converts back ticks to <code> elements.  This routine reverses
+// this for inline (but not block) <code> elements.
+//
+// Markdown has support for nested back ticks.  This routine does not.
+//
+//----------------------------------------------------------------------------//
+
+void    Html::Markdown::fixupCodeSpans (Element& parent)
+{
+    parent.contents.begin()->text.insert(0,"`");
+
+    if (parent.contents.rbegin()->subElement)
+        parent.contents.push_back(ElementPart());
+
+    parent.contents.rbegin()->text.append("`");
 }
 
 //----------------------------------------------------------------------------//
