@@ -53,6 +53,10 @@ namespace   Html
         void    massageCodeElements (Element& parent);
 
         void    fixupCodeSpans (Element& parent);
+
+        // helper routines
+
+        bool    termsInCodeSpan (string &text, const char delim);
     };
 };
 
@@ -217,18 +221,79 @@ void    Html::Markdown::massageCodeElements (Element& parent)
 // Markdown converts back ticks to <code> elements.  This routine reverses
 // this for inline (but not block) <code> elements.
 //
+// It also 'recognises' and 'converts' blankable terms within code spans as,
+// some translators do not translate Markdown within code spans as they should.
+//
 // Markdown has support for nested back ticks.  This routine does not.
 //
 //----------------------------------------------------------------------------//
 
 void    Html::Markdown::fixupCodeSpans (Element& parent)
 {
+    if (parent.contents.size() == 1 && parent.contents.begin()->subElement == 0)
+    {
+        string& text = parent.contents.begin()->text;
+
+        if (termsInCodeSpan(text, '_') + termsInCodeSpan(text, '*'))
+        {
+            istringstream   codeSpan (text);
+
+            parent.contents.pop_front();
+
+            parseElement(codeSpan, parent);
+        }
+    }
+
     parent.contents.begin()->text.insert(0,"`");
 
     if (parent.contents.rbegin()->subElement)
         parent.contents.push_back(ElementPart());
 
     parent.contents.rbegin()->text.append("`");
+}
+
+//----------------------------------------------------------------------------//
+//
+// There seems to be no good reason why a term that merits Markdown back tick
+// emphasis should not also be blankable.
+//
+// Markdown mark-up within back tick code spans should be honored.  GitHub
+// appears to honour it but pandoc does not.  Cribtutor must compenstate.
+//
+// This routine converts code span text from Markdown syntax to html and
+// return true if any conversion took place.  It is expected the caller will
+// then parse the html.
+//
+//----------------------------------------------------------------------------//
+
+bool    Html::Markdown::termsInCodeSpan (string &text, const char delim)
+{
+    bool    trueIfFound = false;
+
+    size_t  bpos = text.find(delim);
+    size_t  epos = string::npos;
+
+    do
+    {
+        if (bpos == string::npos)
+            break;
+
+        epos = text.find(delim,bpos + 1);
+
+        if (epos == string::npos)
+            break;
+
+        if (epos == bpos + 1 || text[epos + 1] == delim)
+            continue;
+
+        text.replace(epos,1,"</em>");
+        text.replace(bpos,1,"<em>");
+
+        trueIfFound = true;
+    }
+    while (bpos = text.find_first_of(delim,epos + 1));
+
+    return (trueIfFound);
 }
 
 //----------------------------------------------------------------------------//

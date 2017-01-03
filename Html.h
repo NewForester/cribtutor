@@ -242,6 +242,9 @@ namespace       Html
 // parsed html cribsheet for debug purposes but its normal run time use is to
 // print statements (i.e. html paragraphs) with one or more terms blanked out.
 //
+// parseElement(), the html parser, is exposed for use by the Massage module,
+// which is part of the Html namespace.
+//
 // For implementation details see Html.cpp.
 //
 //----------------------------------------------------------------------------//
@@ -249,6 +252,8 @@ namespace       Html
 namespace       Html
 {
     extern  void    parseCribSheet (ifstream &input, Html::Element &element);
+
+    extern  void    parseElement (istream& input, Element &element);
 
     extern  bool    verbose;    // debug only
 

@@ -45,10 +45,6 @@ using namespace std;
 
 namespace       Html
 {
-    // the main routine of the html parser
-
-    static  void    parseElement (istream& input, Element &element);
-
     // the routines that actually read from the input.
 
     static  string& readToNextTag  (istream& input, string &content);
