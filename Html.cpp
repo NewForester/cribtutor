@@ -626,16 +626,16 @@ bool    Html::startOfSentence (const Element& parent, const string& content, con
     {
         case (0):
         {
-            if (parent.tag == Markup::para)
-                return (true);
+            if (parent.tag == Markup::para) return (true);
 
-            if (parent.tag == Markup::ulst || parent.tag == Markup::olst)
-                return (false);
+            if (parent.tag == Markup::ulst || parent.tag == Markup::olst) return (false);
 
             break;
         }
         case (1):
         {
+            if (content[0] == '`' && parent.tag == Markup::code) return (true);
+
             if (content[0] != '/') return (false);
 
             const ElementPart&    part = parent.contents[index - 1];
