@@ -478,10 +478,13 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
             subElement.startOfSentence = startOfSentence(element, it->text, index);
             subElement.extraNewLine    = extraNewLine(element, subElement);
-            subElement.strictOrder     = element.strictOrder && subElement.tag != Markup::ulst;
+            subElement.strictOrder    &= element.strictOrder && subElement.tag != Markup::ulst;
 
             it->lineBeforeSubElement = lineBeforeSubElement(element, subElement, htmlBlockElement);
             it->lineAfterSubElement  = lineAfterSubElement(subElement);
+
+            if (index != finalIndex)
+                checkForPairedTerms (*it, *(it + 1));
 
             annotateElement(subElement, htmlBlockElement && element.tag != Markup::para);
 
@@ -489,9 +492,6 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
             if (subElement.tag == Markup::item && element.tag == Markup::olst && it->text.empty())
                 it->text = "  ";
-
-            if (index != 0)
-                checkForPairedTerms (*(it - 1), *it);
 
             if (subElement.tag != Comment::beg)
                 startOfElement = false;
