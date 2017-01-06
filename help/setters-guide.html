@@ -558,7 +558,7 @@ Perhaps &lt;/me&gt; instead of &lt;/em&gt;.
 </p>
 
 
-<h3> Using Markdown </h3>
+<h2> Using Markdown </h2>
 
 <p>
 Html describes how to render a web-page.  It is not a very convenient format for writing web-page contents.
@@ -576,7 +576,7 @@ With Markdown there is a small snag.
 <p>
 Cribtutor considers a list to be part of a question.
 This means the program expects each html list element to be a sub element of a paragraph element.
-The same is true of pre-formatted text (such as code blocks).
+The same is true of pre-formatted text such as code blocks.
 </p>
 <p>
 This is not what Markdown translators generate.
@@ -634,6 +634,38 @@ For example, the following will be considered three separate paragraphs:
 </p>
 <p>
 The compensation and use of comments to prevent it applies to unordered (bullet) lists, ordered (numbered) lists and pre-formatted text (code blocks).
+</p>
+<p>
+Markdown syntax also supports code spans, which do occur within paragraphs:
+<pre>
+    This is a `code span` within a sentence.
+</pre>
+translates to the html:
+<pre>
+    This is a &lt;code&gt;code span&lt;/code&gt; within a sentence.
+</pre>
+Cribtutor honours the original Markdown syntax and will render this as:
+<pre>
+    This is a `code span` within a sentence.
+</pre>
+</p>
+<p>
+Blankable terms may be enclosed in code spans thus:
+<pre>
+    This is a `*blankable compound term*` within a code span.
+</pre>
+Some Markdown translators may ignore Markdown syntax within code spans.
+As far as blankable terms are concerned, cribtutor compensates.
+</p>
+
+<p>
+Markdown syntax supports block quotes, for which translators generate &lt;blockquote&gt; elements.
+Cribtutor simply ignores these.
+</p>
+
+<p>
+GitHub Markdown accepts some WikiMedia syntax links.
+Markdown translators may ignore these as does cribtutor.
 </p>
 
 
