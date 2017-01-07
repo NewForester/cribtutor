@@ -390,15 +390,21 @@ bool    Html::unexpectedNestedTag (const string &tag, const string &previous, st
 
 bool    Html::checkImageElement (string &tag)
 {
-    if (tag.substr(0,5) != "<img ")
+    string attribute;
+
+    if (tag.substr(0,5) == "<img ")
+        attribute = "alt=\"";
+    else if (tag.substr(0,7) == "<embed ")
+        attribute = "title=\"";
+    else
         return (false);
 
-    const int   bpos = tag.find("alt=\"");
+    const int   bpos = tag.find(attribute);
 
     if (bpos == string::npos)
         return (false);
 
-    string  text = tag.substr(bpos + sizeof ("alt=\"") - 1, string::npos);
+    string  text = tag.substr(bpos + attribute.length(), string::npos);
 
     const int   epos = text.find("\"");
 

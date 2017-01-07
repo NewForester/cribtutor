@@ -77,8 +77,12 @@ Comments are used to direct the behaviour of the program in several particular c
 Comments are not output by the program.
 </p><p>
 The program ignores element attributes
-other than the alt="text" attribute of &lt;img&gt; elements:
-the program prints the alternative text.
+other than:
+<ol>
+<li>the alt="text" attribute of &lt;img&gt; elements</li>
+<li>the title="text" attribute of &lt;embed&gt; elements</li>
+</ol>
+for which the program prints the attribute's value.
 </p><p>
 The program recognises and converts html escape sequences.
 Note &apos;&amp;lt;&apos; and &apos;&amp;gt;&apos; must be used for &apos;&lt;&apos; and &apos;&gt;&apos;.

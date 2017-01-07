@@ -32,7 +32,6 @@ Here is a link with an image instead of text:
 </a>.
 </p>
 
-
 <p>
 Here it is again:
 &quot;<a href="default.asp">
@@ -40,6 +39,14 @@ Here it is again:
 </a>&quot;.
 
 </p>
+
+<p>For Markdown image syntax, pandoc generates &lt;embed&gt; instead of &lt;a&gt;</p>
+
+<p>Here is an inline link: <a href="http://example.com" title="Title">Inline</a></p>
+<p>Here is a reference link: <a href="http://google.com" title="Google">Reference</a></p>
+<p>Here is an inline image: <embed src="http://example.com" title="Inline"></p>
+<p>Here is a reference image: <embed src="http://bbc.news.co.uk" title="Reference"></p>
+<p>And the end</p>
 
 <p>Done</p>
 

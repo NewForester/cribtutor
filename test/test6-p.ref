@@ -14,4 +14,16 @@ Here is a link with an image instead of text: "HTML tutorial".
 
 Here it is again: "HTML tutorial".
 
+For Markdown image syntax, pandoc generates <embed> instead of <a>
+
+Here is an inline link: Inline
+
+Here is a reference link: Reference
+
+Here is an inline image: Inline
+
+Here is a reference image: Reference
+
+And the end
+
 Done
