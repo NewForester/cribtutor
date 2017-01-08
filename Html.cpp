@@ -642,7 +642,7 @@ bool    Html::startOfSentence (const Element& parent, const string& content, con
         {
             if (content[0] == '`' && parent.tag == Markup::code) return (true);
 
-            if (content[0] != '/') return (false);
+            if (content[0] != '/' || index == 0) return (false);
 
             const ElementPart&    part = parent.contents[index - 1];
 
