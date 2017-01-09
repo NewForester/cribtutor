@@ -29,8 +29,6 @@
 #include <string>
 #include <vector>
 
-#include <iostream>
-
 using namespace std;
 
 //----------------------------------------------------------------------------//
@@ -75,12 +73,14 @@ using namespace std;
 // Pairs of terms adjacent except for the conjunctions " and ", " or " and "/"
 // are treated as mini-lists of two unordered terms.
 //
+// Yes, conjunctions may be strung together into mini-lists of three or more
+// terms and yes, mixing conjunctions is allowed but makes little sense.
+//
 // A single term containing "/" is also treated in Terms::mask() as a
-// mini-list but it counts as only one choice.  splitIntoWorks() allows a
+// mini-list but it counts as only one choice.  splitIntoWords() allows a
 // user response to include the slash but it is optional.
 //
-// Yes, conjunctions may be strung together into mini-lists of three or more
-// terms and yes, mixing conjunctions is allowed but make little sense.
+// Yes, this does mean the user can enter O/I instead of I/O.
 //
 // 5.   Ignore Punctuation in Responses
 //
@@ -95,14 +95,14 @@ using namespace std;
 // in responses and treat '-' and '/' as well as space as separating words.
 //
 // What if a term legitimately includes a '-' or '/' ?  These characters are
-// not treated a separating words when a word appears to start or end with a
-// non-alphanumeric character.  Yes, this is only a partial solution.
+// not treated as separating words when a word appears to start or end with
+// a non-alphanumeric character.  Yes, this is only a partial solution.
 //
 // 6.   Ignore case at the start of a sentence
 //
 // English sentences begin with a capital letter but a term is a term and
 // should not have to be entered differently simply because of its appears at
-// the start start of a sentence.
+// the start of a sentence.
 //
 // Terms::mask() lowers the case of the first letter of a simple term when
 // the term begins a sentence.  Terms::check() checks terms as is and with
@@ -329,8 +329,6 @@ bool    Terms::check (const MaskedTermList& maskedTerms, const string& response)
 
     splitIntoWords (response, wordList);
 
-    WordList::iterator it = wordList.begin();
-
     // check the masked terms against the response (ordered)
 
     for (MaskedTermList::const_iterator it = maskedTerms.begin(); it != maskedTerms.end(); ++it)
@@ -343,25 +341,44 @@ bool    Terms::check (const MaskedTermList& maskedTerms, const string& response)
         {
             if (wordList.empty()) return (false);
 
-            MaskedTermSet::iterator     it = fuzzyFind (termSet, wordList.front());
+            MaskedTermSet::iterator     termit = fuzzyFind (termSet, *wordList.begin());
 
-            if (it == termSet.end()) return (false);
+            if (termit == termSet.end()) return (false);
+
+            // a loop is needed to handle multimap with duplicate keys
+
+            while (true)
+            {
+                WordList::iterator wordit = wordList.begin();
+
+                // check a compound masked term word for word
+
+                deque< string>::iterator it;
+
+                for (it = termit->second.begin(); it != termit->second.end(); ++it)
+                     if (++wordit == wordList.end() || !fuzzyCompare (*wordit, *it))
+                         break;
+
+                if (it == termit->second.end())
+                    break;
+
+                const string&   keyWord = termit->first;
+
+                if (++termit == termSet.end() || termit->first != keyWord)
+                    return (false);
+            }
+
+            // success - discard
 
             wordList.pop_front();
 
-            // check a compound masked term word for word
-
-            while (!it->second.empty())
+            while (!termit->second.empty())
             {
-                if (wordList.empty()) return (false);
-
-                if (!fuzzyCompare (wordList.front(), it->second.front())) return false;
-
                 wordList.pop_front();
-                it->second.pop_front();
+                termit->second.pop_front();
             }
 
-            termSet.erase(it);
+            termSet.erase(termit);
         }
     }
 

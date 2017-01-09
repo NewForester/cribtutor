@@ -42,6 +42,8 @@ Fill in the blanks:  >> one, three,;
 Gosh: ____ ____ and ____ ____ too.
 Fill in the blanks:  >> really rich, very handsome,;
 
+There are two smoothies: ____ ____ and ____ ____.
+Fill in the blanks: 
 
 Simple Test of Term Blanking and Ordering
     Repeat [yNq] ? 
@@ -51,9 +53,9 @@ ____ ____ ____
 Fill in the blanks: 
 A hyphen test: ____–____.
 Fill in the blanks: 
-____, Tuesday, Wednesday, ____, Friday, Saturday and Sunday.
+____, ____, Wednesday, Thursday, Friday, Saturday and Sunday.
 Fill in the blanks: 
-The days of the week are: Monday, ____, Wednesday, Thursday, Friday, ____ and Sunday makes seven.
+The days of the week are: Monday, Tuesday, ____, Thursday, Friday, Saturday and ____ makes seven.
 Fill in the blanks: 
 Day and night. 
 ____ and ____.
@@ -74,11 +76,13 @@ The cat counted ____ and two and ____.
 Fill in the blanks: 
 Gosh: ____ ____ and ____ ____ too.
 Fill in the blanks: 
+There are two smoothies: ____ ____ and ____ ____.
+Fill in the blanks: 
 
 Simple Test of Term Blanking and Ordering
     Repeat [yNq] ? 
 
-Simple Check that Terminating Separators are Handle Properly
+Simple Check that Terminating Separators are Handled Properly
     Skip [yNq] ? 
 Answer should be operator+: ____.
 Fill in the blanks:  >> operator+,;
@@ -93,7 +97,7 @@ Answer should be operator/: ____.
 Fill in the blanks:  >> operator/,;
 
 
-Simple Check that Terminating Separators are Handle Properly
+Simple Check that Terminating Separators are Handled Properly
     Repeat [yNq] ? 
 Answer should be operator+: ____.
 Fill in the blanks: 

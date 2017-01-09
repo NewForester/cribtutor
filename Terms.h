@@ -64,8 +64,11 @@ namespace       Terms
 // is no reason why compound terms cannot appear in unordered lists but the
 // words in a compound term must be filled in the correct order.
 //
-// To solve this problem, the set is replaced with a map.  The keys are the
-// first words of compound terms or the term itself for simple terms.  The
+// A snag arises when a unordered list comprises two or more compound terms
+// that start with the same word.  A simple set (or map) is not enough.
+//
+// To solve these problems, the set is replaced with a multimap.  The keys are
+// the first words of compound terms or the term itself for simple terms.  The
 // values are deques that are empty for simple terms but for compound terms
 // contain the remaining words in order.
 //
@@ -75,11 +78,11 @@ namespace       Terms
 
 namespace       Terms
 {
-    typedef pair< string, deque< string > >         CompoundTerm;
+    typedef pair< string, deque< string > >             CompoundTerm;
 
-    typedef map< const string, deque< string> >     MaskedTermSet;
+    typedef multimap< const string, deque< string> >    MaskedTermSet;
 
-    typedef deque< MaskedTermSet >                  MaskedTermList;
+    typedef deque< MaskedTermSet >                      MaskedTermList;
 };
 
 //----------------------------------------------------------------------------//
