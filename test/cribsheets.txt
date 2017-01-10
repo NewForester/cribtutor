@@ -21,3 +21,6 @@ markdown.html
 choice.html
 shuffle.html
 list-shuffle.html
+markdown-shuffle.html
+
+# EOF

@@ -52,6 +52,7 @@ namespace   Html
         void    massageAsisLists (Element& element);
         void    massageCodeElements (Element& parent);
 
+        void    fixupListShuffles (Element& listElement);
         void    fixupCodeSpans (Element& parent);
 
         // helper routines
@@ -92,16 +93,21 @@ void    Html::massageElement (Element& element)
 // paragraphs so that they appear as part of a quiz question rather than as
 // a separate questions.
 //
-// Markdown allows paragraphs within list items and it does not seems to be
-// possible in Markdown to mark-up so that translators such as pandoc will
+// Markdown allows paragraphs within list items and it does not seem to be
+// possible in Markdown to mark-up so that translators, such as pandoc, will
 // generate lists and asis blocks within paragraphs.
 //
 // The massageLists() routine compensates by:
+//
 //   - enclosing list and asis elements in a (new) paragraph
 //   - merging the paragraphs either side with the new paragraph
 //   - unless they end/start with a comment
+//
 // This massaging yields the expected cribtutor form by default while allowing
 // the merging to be turned off explicitly when required.
+//
+// This routine is processes ordered lists and is an appropriate place to call
+// fixupListShuffles.
 //
 //----------------------------------------------------------------------------//
 
@@ -121,6 +127,9 @@ void    Html::Markdown::massageAsisLists (Element& element)
         if (subElement->tag != Markup::asis)
             if (subElement->tag != Markup::ulst && subElement->tag != Markup::olst)
                 continue;
+
+        if (subElement->tag == Markup::olst)
+            fixupListShuffles (*subElement);
 
         // push the list down into a paragraph of its own
 
@@ -188,7 +197,7 @@ void    Html::Markdown::massageAsisLists (Element& element)
 // concatenation to <pre><code> and Html::tidyText() is able to act on this
 // to restore the indent in a safe and isolated manner.
 //
-// This routine is recursive, so by calling FixupCodeSpans() the fixup is
+// This routine is recursive, so by calling FixupCodeSpans() this fixup is
 // propagated throughout the parse tree.
 //
 //----------------------------------------------------------------------------//
@@ -210,6 +219,72 @@ void    Html::Markdown::massageCodeElements (Element& parent)
 
     if (parent.tag == Markup::code && !parent.contents.empty())
         fixupCodeSpans(parent);
+}
+
+//----------------------------------------------------------------------------//
+//
+// Cribtutor supports the shuffling of (ordered) list elements but this is
+// based on an specific html comment appearing in a specific place:  between
+// the <ol> tag and the first <li> tag.
+//
+// There is no way to get this when generating html from Markdown mark-up so
+// cribtutor accepts an alternative.  This alternative is massaged into the
+// desired form by this routine.
+//
+// The Markdown syntax:
+/*
+       1. <!-- Shuffle List -->
+          First list item.
+       2. Second list item.
+*/
+// generates:
+/*
+       <ol>
+       <li><!-- Shuffle List --> First list item.</li>
+       <li>Second list item.</li>
+       </ol>
+*/
+// which this routine massages into:
+/*
+       <ol><!-- Shuffle List -->
+       <li> First list item.</li>
+       <li>Second list item.</li>
+       </ol>
+ */
+//
+//----------------------------------------------------------------------------//
+
+void    Html::Markdown::fixupListShuffles (Element& listElement)
+{
+    Element*    subElement;
+
+    // is there a Shuffle List comment at the start of the first list item ?
+
+    subElement = listElement.contents.front().subElement;
+
+    if (!subElement || subElement->tag != Markup::item) return;
+
+    Element&    itemElement = *subElement;
+
+    if (itemElement.contents.empty()) return;
+
+    subElement = itemElement.contents.front().subElement;
+
+    if (!subElement || subElement->tag != Comment::beg) return;
+
+    Element&    comment = *subElement;
+
+    if (comment.contents.empty()) return;
+
+    string& text = comment.contents.front().text;
+
+    if (text.find("Shuffle List") == string::npos) return;
+
+    // massage: move the comment from the first list item to the front of the list
+
+    listElement.contents.push_front(itemElement.contents.front());
+
+    itemElement.contents.pop_front();
 }
 
 //----------------------------------------------------------------------------//

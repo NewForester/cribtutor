@@ -562,6 +562,7 @@ Perhaps &lt;/me&gt; instead of &lt;/em&gt;.
 </p>
 
 
+
 <h2> Using Markdown </h2>
 
 <p>
@@ -575,8 +576,12 @@ There are several translators that will convert text with Markdown mark-up into 
 </p>
 <p>
 Writing crib sheets using a wiki mark-up and using a translator can avoid a lot of tedious editing time.
-With Markdown there is a small snag.
+With Markdown there a couple of small snags.
 </p>
+
+
+<h3> Lists and Code Blocks within Paragraphs </h3>
+
 <p>
 Cribtutor considers a list to be part of a question.
 This means the program expects each html list element to be a sub element of a paragraph element.
@@ -585,7 +590,7 @@ The same is true of pre-formatted text such as code blocks.
 <p>
 This is not what Markdown translators generate.
 List elements and pre-formatted text are block elements equal to paragraphs.
-This is, in part, because Markdown supports list items that comprise one or more paragraphs and code blocks.
+This is, in part, because Markdown supports list items that comprise one or more paragraphs etc.
 </p>
 <p>
 The cribtutor program compensates but sometimes you may not want this.
@@ -639,6 +644,30 @@ For example, the following will be considered three separate paragraphs:
 <p>
 The compensation and use of comments to prevent it applies to unordered (bullet) lists, ordered (numbered) lists and pre-formatted text (code blocks).
 </p>
+
+
+<h3> Shuffling Lists </h3>
+
+<p>
+To use the list shuffling feature (already described) with Markdown, you should write an ordered list as:
+</p>
+
+<p>
+<pre>
+    1. &lt;!-- Shuffle List --&gt;
+       First list item.
+    2. Second list item.
+</pre>
+</p>
+
+<p>
+This places the comment at the beginning of the first item of the list instead of at the beginning of the list.
+Cribtutor knows this and compensates.
+</p>
+
+
+<h3> Code Spans </h3>
+
 <p>
 Markdown syntax also supports code spans, which do occur within paragraphs:
 <pre>
@@ -661,6 +690,9 @@ Blankable terms may be enclosed in code spans thus:
 Some Markdown translators may ignore Markdown syntax within code spans.
 As far as blankable terms are concerned, cribtutor compensates.
 </p>
+
+
+<h3> Other Considerations </h3>
 
 <p>
 Markdown syntax supports block quotes, for which translators generate &lt;blockquote&gt; elements.
