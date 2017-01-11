@@ -2,82 +2,82 @@
 Simple Test of Term Blanking and Ordering
     Skip [yNq] ? 
 Hello ____
-Fill in the blanks:  >> Paul,;
+Fill in 1 blanked term:  >> Paul,;
 
 ____ ____ ____
-Fill in the blanks:  >> World Health Organisation,;
+Fill in 1 blanked term:  >> World Health Organisation,;
 
 A hyphen test: ____–____.
-Fill in the blanks:  >> micro computer,;
+Fill in 1 blanked term:  >> micro computer,;
 
 Monday, Tuesday, Wednesday, ____, ____, Saturday and Sunday.
-Fill in the blanks:  >> Friday, Thursday,;
+Fill in 2 blanked terms:  >> Friday, Thursday,;
 
 The days of the week are: Monday, Tuesday, ____, Thursday, ____, Saturday and Sunday makes seven.
-Fill in the blanks:  >> Friday, Wednesday,;
+Fill in 2 blanked terms:  >> Friday, Wednesday,;
 
 Day and night. 
 ____ and ____.
-Fill in the blanks:  >> day, night,;
+Fill in 2 blanked terms:  >> day, night,;
 
 Light or dark. 
 ____ or ____.
-Fill in the blanks:  >> dark, light,;
+Fill in 2 blanked terms:  >> dark, light,;
 
 True/False. 
 ____/____.
-Fill in the blanks:  >> false, true,;
+Fill in 2 blanked terms:  >> false, true,;
 
 Is it not a Black/White dichotomy. 
 Is it not a ____/____ dichtomy.
-Fill in the blanks:  >> Black, White,;
+Fill in 2 blanked terms:  >> Black, White,;
 
 I am at once happy/sad/confused. 
 I am at once ____/____/____.
-Fill in the blanks:  >> confused, happy, sad,;
+Fill in 3 blanked terms:  >> confused, happy, sad,;
 
 The cat counted ____ and two and ____.
-Fill in the blanks:  >> one, three,;
+Fill in 2 blanked terms:  >> one, three,;
 
 Gosh: ____ ____ and ____ ____ too.
-Fill in the blanks:  >> really rich, very handsome,;
+Fill in 2 blanked terms:  >> really rich, very handsome,;
 
 There are two smoothies: ____ ____ and ____ ____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 
 Simple Test of Term Blanking and Ordering
     Repeat [yNq] ? 
 Hello ____
-Fill in the blanks: 
+Fill in 1 blanked term: 
 ____ ____ ____
-Fill in the blanks: 
+Fill in 1 blanked term: 
 A hyphen test: ____–____.
-Fill in the blanks: 
+Fill in 1 blanked term: 
 ____, ____, Wednesday, Thursday, Friday, Saturday and Sunday.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 The days of the week are: Monday, Tuesday, ____, Thursday, Friday, Saturday and ____ makes seven.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 Day and night. 
 ____ and ____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 Light or dark. 
 ____ or ____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 True/False. 
 ____/____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 Is it not a Black/White dichotomy. 
 Is it not a ____/____ dichtomy.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 I am at once happy/sad/confused. 
 I am at once ____/____/____.
-Fill in the blanks: 
+Fill in 3 blanked terms: 
 The cat counted ____ and two and ____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 Gosh: ____ ____ and ____ ____ too.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 There are two smoothies: ____ ____ and ____ ____.
-Fill in the blanks: 
+Fill in 2 blanked terms: 
 
 Simple Test of Term Blanking and Ordering
     Repeat [yNq] ? 
@@ -85,28 +85,28 @@ Simple Test of Term Blanking and Ordering
 Simple Check that Terminating Separators are Handled Properly
     Skip [yNq] ? 
 Answer should be operator+: ____.
-Fill in the blanks:  >> operator+,;
+Fill in 1 blanked term:  >> operator+,;
 
 Answer should be operator-: ____.
-Fill in the blanks:  >> operator-,;
+Fill in 1 blanked term:  >> operator-,;
 
 Answer should be operator*: ____.
-Fill in the blanks:  >> operator*,;
+Fill in 1 blanked term:  >> operator*,;
 
 Answer should be operator/: ____.
-Fill in the blanks:  >> operator/,;
+Fill in 1 blanked term:  >> operator/,;
 
 
 Simple Check that Terminating Separators are Handled Properly
     Repeat [yNq] ? 
 Answer should be operator+: ____.
-Fill in the blanks: 
+Fill in 1 blanked term: 
 Answer should be operator-: ____.
-Fill in the blanks: 
+Fill in 1 blanked term: 
 Answer should be operator*: ____.
-Fill in the blanks: 
+Fill in 1 blanked term: 
 Answer should be operator/: ____.
-Fill in the blanks: 
+Fill in 1 blanked term: 
 
 Test Capitalisation at the Start of a Sentence
     Skip [yNq] ? 

@@ -179,7 +179,7 @@ void    Terms::reset (SourceTermList& sourceTerms)
 
 //----  create a list of masked terms and set the blanking content mask for each
 
-void    Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, int termCount, const int choices)
+int     Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, int termCount, const int choices)
 {
     maskedTerms.clear();
 
@@ -260,6 +260,8 @@ void    Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, i
 
             bpos = epos + 1;
             epos = safeEndPosition(termText.find_first_of("/", bpos), termText);
+
+            ++termCount;
         }
 
         if (bpos != termText.length())
@@ -279,6 +281,8 @@ void    Terms::mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, i
 
     if (!termSet.empty())
         maskedTerms.push_back(termSet);
+
+    return (termCount);
 }
 
 //----  construct a (compound) masked term and set the blanking content mask

@@ -94,7 +94,7 @@ namespace   Dialogue
 
 namespace       Dialogue
 {
-    static  bool    tryAgain (const Terms::MaskedTermList& maskedTerms, bool& goodResponse);
+    static  bool    tryAgain (const Terms::MaskedTermList& maskedTerms, const int termCount, bool& goodResponse);
 };
 
 //----------------------------------------------------------------------------//
@@ -166,10 +166,11 @@ void    Dialogue::fillInTheBlanks (const Html::Element& element, Quiz::ContentsL
         // ask the user to fill in the blanks until they get it right or give up
 
         Terms::MaskedTermList  maskedTerms;
+        int blankedCount;
 
         do
         {
-            Terms::mask(maskedTerms, sourceTerms, termCount, choices);
+            blankedCount = Terms::mask(maskedTerms, sourceTerms, termCount, choices);
 
             cout << element << endl;
 
@@ -181,7 +182,7 @@ void    Dialogue::fillInTheBlanks (const Html::Element& element, Quiz::ContentsL
 
             Terms::reset(sourceTerms);
         }
-        while (tryAgain(maskedTerms, goodResponse));
+        while (tryAgain(maskedTerms, blankedCount, goodResponse));
     }
 
     cout << endl;
@@ -203,7 +204,7 @@ void    Dialogue::fillInTheBlanks (const Html::Element& element, Quiz::ContentsL
 //
 //----------------------------------------------------------------------------//
 
-bool    Dialogue::tryAgain (const Terms::MaskedTermList& maskedTerms, bool& goodResponse)
+bool    Dialogue::tryAgain (const Terms::MaskedTermList& maskedTerms, const int termCount, bool& goodResponse)
 {
     string  response;
 
@@ -211,7 +212,10 @@ bool    Dialogue::tryAgain (const Terms::MaskedTermList& maskedTerms, bool& good
 
     if (cin)
     {
-        cout << "Fill in the blanks: ";
+        if (termCount == 1)
+            cout << "Fill in 1 blanked term: ";
+        else
+            cout << "Fill in " << termCount << " blanked terms: ";
         getline(cin, response);
     }
 

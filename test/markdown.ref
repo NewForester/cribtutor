@@ -8,7 +8,7 @@ I do not like this web interface. Odd, because while I generally dislike GUIs, I
 This is a paragraph that contain a list: + one + two + three but this is not interpreted as I would expect.
 
 I have tried converting such lists to html using ____–____ and ____.
-Fill in the blanks:  >> pandoc, python markdown,;
+Fill in 2 blanked terms:  >> pandoc, python markdown,;
 
 These worthy Mardown to html converters do not recognise the list without the blank lines.
 
@@ -24,16 +24,16 @@ I tried a script that uses the GitHub API directly but my OS is too old for the 
 One thing is clear on GitHub is that the blank line is required at the end of a paragraph and may be required at the beginning too.
 
 I'm thinking of ____ it as follows:
-Fill in the blanks:  >> hacking,;
+Fill in 1 blanked term:  >> hacking,;
 
 one, ____, three,
-Fill in the blanks:  >> two,;
+Fill in 1 blanked term:  >> two,;
 
 will be ____ as a stand-alone list.
-Fill in the blanks:  >> interpreted,;
+Fill in 1 blanked term:  >> interpreted,;
 
 But ____ the hack - one, ____, three - adjacent paragraphs will be incorporated.
-Fill in the blanks:  >> without,; two,;
+Fill in 2 blanked terms:  >> without,; two,;
 
 An ordered list test case is required: 
 
@@ -42,7 +42,7 @@ An ordered list test case is required:
   third,
 
 to round off the ____.
-Fill in the blanks:  >> second,; tests,;
+Fill in 2 blanked terms:  >> second,; tests,;
 
 Also a ____ ____ test: 
 
@@ -55,7 +55,7 @@ Also a ____ ____ test:
     }
 
 to make absolutely certain.
-Fill in the blanks:  >> code block,;
+Fill in 1 blanked term:  >> code block,;
 
 
 Test of Lists and Code Blocks
@@ -64,46 +64,46 @@ Test of Lists and Code Blocks
 Code Span Tests
     Skip [yNq] ? 
 Here is a ____ `code span` example.
-Fill in the blanks:  >> simple,;
+Fill in 1 blanked term:  >> simple,;
 
 Now for an example of embedded terms that have been translated: `____ ____`
-Fill in the blanks:  >> code span,;
+Fill in 1 blanked term:  >> code span,;
 
 Another example: `Eg ____ ____ QED`
-Fill in the blanks:  >> code span,;
+Fill in 1 blanked term:  >> code span,;
 
 Another example: `____ span`
-Fill in the blanks:  >> code,;
+Fill in 1 blanked term:  >> code,;
 
 Another example: `code ____`
-Fill in the blanks:  >> span,;
+Fill in 1 blanked term:  >> span,;
 
 Another example: `____/____`
-Fill in the blanks:  >> code, span,;
+Fill in 2 blanked terms:  >> code, span,;
 
 Examples using imperfect `pandoc` translation: `____ ____`
-Fill in the blanks:  >> code span,;
+Fill in 1 blanked term:  >> code span,;
 
 Another example: `Eg ____ ____ QED`
-Fill in the blanks:  >> code,; span,;
+Fill in 2 blanked terms:  >> code,; span,;
 
 Another example: `**code** ____`
-Fill in the blanks:  >> span,;
+Fill in 1 blanked term:  >> span,;
 
 Another example: `**____ ____**`
-Fill in the blanks:  >> code span,;
+Fill in 1 blanked term:  >> code span,;
 
 Another example: `big____giant`
-Fill in the blanks:  >> hungry,;
+Fill in 1 blanked term:  >> hungry,;
 
 ____ of sentence capitalisation should work inside a code span. ____ world.
-Fill in the blanks:  >> start,; hello,;
+Fill in 2 blanked terms:  >> start,; hello,;
 
 `____` of sentence capitalisation should work inside a code span. `____` world.
-Fill in the blanks:  >> start,; hello,;
+Fill in 2 blanked terms:  >> start,; hello,;
 
 Mini-list pairs should work with code spans: `____` or `____`.
-Fill in the blanks:  >> asterisk, underscore,;
+Fill in 2 blanked terms:  >> asterisk, underscore,;
 
 
 Code Span Tests

@@ -109,7 +109,7 @@ namespace   Terms
 {
     extern  void    reset (SourceTermList& sourceTerms);
 
-    extern  void    mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, int termCount, const int choices);
+    extern  int     mask (MaskedTermList& maskedTerms, SourceTermList& sourceTerms, int termCount, const int choices);
 
     extern  bool    check (const MaskedTermList& maskedTerms, const string& response);
 };
