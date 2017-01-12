@@ -580,11 +580,13 @@ void    Html::tidyText (string& content, const string &tag, const bool startOfEl
 
 void    Html::checkForPairedTerms (ElementPart& lhs, ElementPart& rhs)
 {
-    static  const char*     joinText[] = {"/", " and ", " or "};
+    static  string  joinText[] = {"/", " and ", " or "};
 
     if (lhs.subElement == 0 || rhs.subElement == 0) return;
 
     const string&   text = rhs.text;
+
+    if (text.size() == 0) return;
 
     for (int ii = 0; ii < 3; ++ii)
         if (text == joinText[ii])
@@ -592,6 +594,15 @@ void    Html::checkForPairedTerms (ElementPart& lhs, ElementPart& rhs)
             lhs.subElement->strictOrder = rhs.subElement->strictOrder = false;
 
             break;
+        }
+        else if (text.substr(0,joinText[ii].length()) == joinText[ii])
+        {
+            string  extra = text.substr(joinText[ii].length());
+
+            int     len = lhs.text.length() - extra.length();
+
+            if (len > 0 && lhs.text.substr(len) == extra)
+                lhs.subElement->strictOrder = rhs.subElement->strictOrder = false;
         }
 }
 

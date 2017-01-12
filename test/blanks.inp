@@ -12,20 +12,22 @@
 ?
 ?
 operator new[], operator delete[]
+?
 y
 Paul
 World Health Organisation
 micro-computer
-Monday, Tuesday
-Wednesday, Sunday
+Wednesday, Thursday
+Wednesday, Saturday
 night, day
 dark, light
 false/true
 White, Black
 happy, sad, confused
-one, three
+two, three
 very handsome; really rich
 operator delete[], operator new[]
+delete[], new[]
 n
 n
 ?
@@ -38,4 +40,3 @@ operator-
 operator*
 operator/
 q
-
