@@ -90,7 +90,7 @@ namespace       Html
 
     // recursive routine to print an element and its nested sub elements
 
-    static  void    printElement (ostream &stream, const Element& element, string indent = "");
+    static  int     printElement (ostream &stream, const Element& element, string indent = "");
 
     // html is hierarchy that requires a recursive print routine
 
@@ -460,12 +460,14 @@ bool    Html::openAndCloseTag (string &tag)
 
 void    Html::annotateElement (Element& element, bool htmlBlockElement)
 {
-    deque< ElementPart >::iterator  it;
+    ElementContents::iterator   it;
 
-    size_t    index;
-    size_t    finalIndex = element.contents.size() - 1;
+    size_t  index;
+    size_t  finalIndex = element.contents.size() - 1;
 
-    bool      startOfElement = true;
+    bool    startOfElement = true;
+
+    size_t  listTabStop = 0;
 
     for (it = element.contents.begin(), index = 0; it != element.contents.end(); ++it, ++index)
     {
@@ -501,6 +503,41 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
             if (subElement.tag != Comment::beg)
                 startOfElement = false;
+
+            if (element.tag == Markup::olst && subElement.tag == Markup::item)
+            {
+                // suppose the list has items of the form:
+                //     term - description
+                // would it not be nice to line up the descriptions ?
+
+                // calculate the offset of the - required to do the nice thing
+
+                ElementContents::iterator   it = subElement.contents.begin();
+
+                size_t  itemTabStop = 0;
+
+                for (it = subElement.contents.begin(); it != subElement.contents.end(); ++it)
+                {
+                    if (!it->text.empty())
+                    {
+                        size_t  pos = it->text.find(" - ");
+
+                        if (pos == string::npos)
+                        {
+                            itemTabStop += it->text.length();
+                        }
+                        else
+                        {
+                            listTabStop = max (listTabStop, itemTabStop + pos);
+
+                            break;
+                        }
+                    }
+
+                    if (it->subElement && it->subElement->tag == Markup::term)
+                        itemTabStop += it->subElement->contents.front().text.length();
+                }
+            }
         }
         else
         {
@@ -508,6 +545,13 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
                 element.endOfSentence = endOfSentence(it->text);
         }
     }
+
+    // apply the offset required to do the nice thing
+
+    if (element.tag == Markup::olst)
+        for (it = element.contents.begin(); it != element.contents.end(); ++it)
+            if (it->subElement && it->subElement->tag == Markup::item)
+                it->subElement->padWidth = listTabStop;
 }
 
 //----------------------------------------------------------------------------//
@@ -728,19 +772,21 @@ bool    Html::lineAfterSubElement (const Element& element)
 //
 //----------------------------------------------------------------------------//
 
-void    Html::printElement (ostream &stream, const Element& element, string indent)
+int     Html::printElement (ostream &stream, const Element& element, string indent)
 {
+    bool    lineBetween = false;
+    bool    lineAfter = false;
+
+    ElementContents::const_iterator   it;
+
+    int     textLength = 0;
+
     if (verbose)
     {
         stream << indent << element.tag << endl;
 
         indent += "  ";
     }
-
-    bool    lineBetween = false;
-    bool    lineAfter = false;
-
-    deque< ElementPart >::const_iterator  it;
 
     for (it = element.contents.begin(); it != element.contents.end(); ++it)
     {
@@ -750,9 +796,44 @@ void    Html::printElement (ostream &stream, const Element& element, string inde
                 stream << "\n\n";
 
             if (!element.contentMask.empty())
+            {
                 stream << indent << element.contentMask;
-            else
+                textLength += element.contentMask.length();
+            }
+            else if (element.padWidth == 0)
+            {
                 stream << indent << it->text;
+                textLength += it->text.length();
+            }
+            else
+            {
+                // suppose a list has items of the form:
+                //     term - description
+                // would it not be nice to line up the descriptions ?
+
+                // line them up by padding the current text length to the pad width calculated earlier
+
+                size_t  pos = it->text.find(" - ");
+
+                if (pos == string::npos && it->text.substr(0,2) == "- ")
+                    pos = 0, --textLength;
+
+                if (pos == string::npos)
+                {
+                    stream << indent << it->text;
+                    textLength += it->text.length();
+                }
+                else
+                {
+                    stream << it->text.substr(0, pos);
+                    textLength += pos;
+
+                    while (textLength++ < element.padWidth)
+                        stream << indent << ' ';
+
+                    stream << it->text.substr(pos);
+                }
+            }
 
             lineAfter = false;
             lineBetween = it->lineBeforeSubElement;
@@ -768,7 +849,7 @@ void    Html::printElement (ostream &stream, const Element& element, string inde
             if (lineAfter || lineBetween && it->lineBeforeSubElement)
                 stream << "\n\n";
 
-            printElement(stream, subElement, indent);
+            textLength += printElement(stream, subElement, indent);
 
             if (subElement.extraNewLine && (it + 1 != element.contents.end()))
                 if (subElement.endOfSentence)
@@ -792,6 +873,8 @@ void    Html::printElement (ostream &stream, const Element& element, string inde
 
         stream << endl << indent.substr(2) << endTag << endl;
     }
+
+    return (textLength);
 }
 
 //----------------------------------------------------------------------------//

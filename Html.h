@@ -128,6 +128,7 @@ namespace       Html
         bool        endOfSentence;
         bool        startOfSentence;
         bool        extraNewLine;
+        int         padWidth;
         string      contentMask;
 
         Element (string tag = Html::Markup::none) :
@@ -136,7 +137,8 @@ namespace       Html
             strictOrder (true),
             endOfSentence (false),
             startOfSentence (false),
-            extraNewLine (false)
+            extraNewLine (false),
+            padWidth (0)
             {}
 
         Element&    merge (Html::Element& rhs)
