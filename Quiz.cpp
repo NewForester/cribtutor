@@ -46,21 +46,22 @@ namespace       Quiz
 
         static  bool    paragraphs (const ContentsIterator& first, const ContentsIterator& last, const int choices, int &maxTermCount);
 
-        // the three helper routines used by the delegates
+        // two helper routines used by the delegates
 
         static  void    findHeaderTags (ContentsList& markers, const ContentsIterator& first, const ContentsIterator& last, const string& markerTag);
 
         static  void    findTermTags (ContentsList& terms, const ContentsIterator& first, const ContentsIterator& last, const string& termTag);
+
+        // the shuffle routines used by paragraphs()
 
         static  void    shuffleParagraphs (const ContentsIterator& first, const ContentsIterator& last);
 
         static  void    shuffleOrderedLists (Html::Element& paragraph);
     };
 
-    // the quiz header a level above chapter headers
+    // the quiz header (if any) - a level above chapter headers
 
     static  string  tomeHeader;
-
 };
 
 //----------------------------------------------------------------------------//
@@ -76,11 +77,16 @@ namespace       Quiz
 // The quiz master delegates to Process::chapters(), which delegates to
 // Process::sections(), which delegates to Process::paragraphs().
 //
-// There is one complication.
+// There are two complications.
 //
-// The notion of chapters with sections requires only two levels of header:
-// <h1> and <h2>.  However, for large quizzes with many cribsheet files,
-// two levels is insufficient.
+// The first is that the crib sheet might be just a crib sheet with headers
+// and paragraphs at the top level or it might be a complete html document.
+// In the second case, the program has to find the html elements of interest
+// inside those it does not care about.
+//
+// The second is that the notion of chapters with sections requires only two
+// levels of header:  <h1> and <h2>.  However, for large quizzes with many
+// cribsheet files two levels is insufficient.
 //
 // The program supports an alternative where, typically, each cribsheet file
 // represents a level above chapter (named here a tome).  Chapters and sections
@@ -88,8 +94,8 @@ namespace       Quiz
 //
 // The complication is printing the tome header only when it changes when that
 // typically (but not necessarily) happens as processing moves on to the next
-// cribsheet at a level above the quiz master.  Hence the use of static
-// data at the namespace level.
+// crib sheet at a level above the quiz master.  Hence the use of static data
+// at the namespace level.
 //
 //----------------------------------------------------------------------------//
 
@@ -97,41 +103,50 @@ namespace       Quiz
 
 void    Quiz::run (SectionNumber& prefix, Html::Element& quiz, int choices)
 {
-    // special for <h1> when chapters are <h2> and sections are <h3>
-
     ContentsIterator  it;
+
+    // look in this quiz element for quiz questions
 
     for (it = quiz.contents.begin(); it != quiz.contents.end(); ++it)
     {
         if (it->subElement == 0)
-            break;
+            continue;
 
         const Html::Element&    element = *it->subElement;
 
-        if (element.tag == Html::Markup::hdr2)
-            break;
-
-        if (element.tag != Html::Markup::hdr1)
-            continue;
-
-        const string&   header = element.contents.front().text;
-
-        if (header != tomeHeader)
+        if (element.tag == Html::Markup::para)
         {
-            tomeHeader = header;
+            // quiz questions found - process chapters/sections/paragraphs
 
-            if (prefix.singleDigit())
-                ;
-            else if (prefix.doubleDigit())
-                cout << prefix.quiz(header) << endl << endl;
-            else if (Dialogue::skipYesNo(tomeHeader))
-                return;
+            Process::chapters(prefix, quiz.contents.begin(), quiz.contents.end(), choices);
+
+            return;
+        }
+        else if (element.tag == Html::Markup::hdr1)
+        {
+            // print new tome header if appropriate
+
+            const string&   header = element.contents.front().text;
+
+            if (header != tomeHeader)
+            {
+                tomeHeader = header;
+
+                if (prefix.singleDigit())
+                    ;
+                else if (prefix.doubleDigit())
+                    cout << prefix.quiz(header) << endl << endl;
+                else if (Dialogue::skipYesNo(tomeHeader))
+                    return;
+            }
         }
     }
 
-    // process chapters
+    // no quiz questions found - try all sub elements
 
-    Process::chapters(prefix, quiz.contents.begin(), quiz.contents.end(), choices);
+    for (it = quiz.contents.begin(); it != quiz.contents.end(); ++it)
+        if (it->subElement)
+            run (prefix, *it->subElement, choices);
 }
 
 //----------------------------------------------------------------------------//
@@ -139,7 +154,7 @@ void    Quiz::run (SectionNumber& prefix, Html::Element& quiz, int choices)
 // The three nested delegates.
 //
 // These embody the notion of for each chapter, for each section, and for each
-// paragraph.  They handle the skip/repeat.
+// paragraph.  They handle skip/repeat.
 //
 // Their complication is tracking good/bad responses on a chapter/section
 // basis so the number of choices may be incremented (or not) when the user
@@ -283,17 +298,10 @@ bool    Quiz::Process::paragraphs (const ContentsIterator& first, const Contents
 
 //----------------------------------------------------------------------------//
 //
-// The three helper routines used by the three nested delegates.
+// Two helper routines used by the three nested delegates.
 //
 // The delegates embody the notions of for each chapter, section or paragraph.
-// The first two of these helper routines build the lists chapters, sections
-// or paragraphs.
-//
-// The last of these routines shuffles the order of paragraphs and thus the
-// order in which questions are posed in order to make a quiz less predictable.
-//
-// The shuffling is turned on (and off) within a section by the presence of
-// html comments that read "Shuffle On" and "Shuffle Off".
+// These helper routines build the lists of chapters/sections and paragraphs.
 //
 //----------------------------------------------------------------------------//
 
@@ -332,6 +340,24 @@ void    Quiz::Process::findTermTags (ContentsList& terms, const ContentsIterator
             findTermTags(terms, subElement.contents.begin(), subElement.contents.end(), tag);
     }
 }
+
+//----------------------------------------------------------------------------//
+//
+// The shuffle routines used by paragraphs().
+//
+// The first of these shuffles the order of paragraphs and thus the order in
+// which questions are posed in order to make the quiz less predictable.
+//
+// The shuffling is turned on and off within a section by the presence of
+// html comments that read "Shuffle On" and "Shuffle Off".
+//
+// The second routine shuffles the order of items within an ordered list, also
+// in order make the quiz less predictable.
+//
+// This shuffling of list items is triggered by the presence of an html comment
+// at the head of the list before the first item that reads "Shuffle List".
+//
+//----------------------------------------------------------------------------//
 
 //----  shuffle paragraphs as directed by comments
 
@@ -379,17 +405,17 @@ void    Quiz::Process::shuffleOrderedLists (Html::Element& paragraph)
 
         if (it->subElement == 0) continue;
 
-        Html::Element&  list = *(it->subElement);
+        Html::Element&  list = *it->subElement;
 
         if (list.tag != Html::Markup::olst) continue;
 
         // check the first subelement is a comment
 
-        ContentsIterator  it = list.contents.begin();
+        const ContentsIterator  it = list.contents.begin();
 
         if (it->subElement == 0) continue;
 
-        Html::Element&  element = *(it->subElement);
+        const Html::Element&  element = *it->subElement;
 
         if (element.tag != Html::Comment::beg || element.contents.empty()) continue;
 

@@ -126,7 +126,11 @@ void    Html::Markdown::massageAsisLists (Element& element)
 
         if (subElement->tag != Markup::asis)
             if (subElement->tag != Markup::ulst && subElement->tag != Markup::olst)
+            {
+                if (subElement->tag != Markup::para)
+                    massageAsisLists (*subElement);
                 continue;
+            }
 
         if (subElement->tag == Markup::olst)
             fixupListShuffles (*subElement);
