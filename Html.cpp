@@ -469,11 +469,16 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
     size_t  listTabStop = 0;
 
+    bool    codeBlockSpecial = (element.tag == Markup::asis + Markup::code);
+
     for (it = element.contents.begin(), index = 0; it != element.contents.end(); ++it, ++index)
     {
+        if (codeBlockSpecial && index == 0)
+            codeBlockSpecial = (it->text.substr(0,4) == "    ");
+
         if (!it->text.empty())
         {
-            tidyText(it->text, element.tag, startOfElement, index == finalIndex && ! it->subElement);
+            tidyText(it->text, codeBlockSpecial ? Markup::asis : element.tag, startOfElement, index == finalIndex && ! it->subElement);
 
             Escapes::replace (it->text);
 
@@ -569,7 +574,7 @@ void    Html::tidyText (string& content, const string &tag, const bool startOfEl
 
     size_t pos;
 
-    if (tag != Markup::asis && tag != Markup::asis + Markup::code)
+    if (tag != Markup::asis && tag != Markup::code && tag != Markup::asis + Markup::code && tag != Markup::span)
     {
         // convert new lines to spaces
 
@@ -612,10 +617,15 @@ void    Html::tidyText (string& content, const string &tag, const bool startOfEl
 
         if (tag == Markup::asis + Markup::code)
         {
-            content.insert(0,"    ");
+            pos = 0;
 
-            for (pos = content.find("\n"); pos != string::npos; pos = content.find("\n",pos))
-                content.insert(++pos,"    ");
+            if (startOfElement)
+                if (content[pos] != '\n' && content[pos] != '\0')
+                    content.insert(pos,"    ");
+
+            for (pos = content.find("\n"); pos++ != string::npos; pos = content.find("\n",pos))
+                if (content[pos] != '\n' && content[pos] != '\0')
+                   content.insert(pos,"    ");
         }
     }
 }

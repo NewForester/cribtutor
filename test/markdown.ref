@@ -47,7 +47,7 @@ Fill in 2 blanked terms:  >> second,; tests,;
 Also a ____ ____ test: 
 
     #include    <stdio.h>
-    
+
     int main (int argc, char* argv [])
     {
         printf ("Hello World!\n");
