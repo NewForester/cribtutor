@@ -10,5 +10,6 @@ command-line.html
 basic-idea.html
 drivers-guide.html
 setters-guide.html
+markdown.html
 
 # EOF
