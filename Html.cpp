@@ -910,6 +910,12 @@ string& Html::Escapes::replace (string& statement)
         escapes.insert(pair<string, string> ("&amp;",  "&"));
         escapes.insert(pair<string, string> ("&apos;", "'"));
         escapes.insert(pair<string, string> ("&quot;", "\""));
+
+        escapes.insert(pair<string, string> ("&#60;",   "<"));
+        escapes.insert(pair<string, string> ("&#62;",   ">"));
+        escapes.insert(pair<string, string> ("&#38;",  "&"));
+        escapes.insert(pair<string, string> ("&#39;", "'"));
+        escapes.insert(pair<string, string> ("&#34;", "\""));
     }
 
     if (statement.find("&") != string::npos &&
