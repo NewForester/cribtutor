@@ -147,7 +147,7 @@ void    Html::Markdown::massageAsisLists (Element& element)
 
         // is there a paragraph after that does not start with a comment ?
 
-        if (it != element.contents.end())
+        if ((it + 1) != element.contents.end())
         {
             Element*    after = (it + 1)->subElement;
 
