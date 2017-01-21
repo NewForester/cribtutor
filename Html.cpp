@@ -393,25 +393,39 @@ bool    Html::checkImageElement (string &tag)
     string attribute;
 
     if (tag.substr(0,5) == "<img ")
-        attribute = "alt=\"";
+        attribute = "alt=";
     else if (tag.substr(0,7) == "<embed ")
-        attribute = "title=\"";
+        attribute = "title=";
     else
         return (false);
 
-    const int   bpos = tag.find(attribute);
+    const int   apos = tag.find(attribute);
 
-    if (bpos == string::npos)
+    if (apos == string::npos)
         return (false);
 
-    string  text = tag.substr(bpos + attribute.length(), string::npos);
+    const char  delim = tag[apos + attribute.length()];
 
-    const int   epos = text.find("\"");
+    if (delim == '"' || delim == '\'')
+    {
+        const int   bpos = apos + attribute.length() + 1;
+        const int   epos = tag.find(delim, bpos);
 
-    if (epos == string::npos)
-        return (false);
+        if (epos == string::npos)
+            return (false);
 
-    tag = text.substr(0,epos);
+        tag = tag.substr(bpos, epos - bpos);
+    }
+    else
+    {
+        const int   bpos = apos + attribute.length();
+        const int   epos = tag.find(' ', bpos);
+
+        if (epos == string::npos)
+            tag = tag.substr(bpos, tag.size() - bpos - 1);
+        else
+            tag = tag.substr(bpos, epos - bpos);
+    }
 
     return (true);
 }
