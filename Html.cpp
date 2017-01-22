@@ -778,7 +778,7 @@ bool    Html::lineBeforeSubElement (const Element& parent, Element& element, con
 
 bool    Html::lineAfterSubElement (const Element& element)
 {
-    return (element.tag == Markup::asis || element.tag == Markup::olst);
+    return (element.tag == Markup::asis || element.tag == Markup::pass || element.tag == Markup::olst);
 }
 
 //----------------------------------------------------------------------------//
@@ -869,6 +869,8 @@ int     Html::printElement (ostream &stream, const Element& element, string inde
 
             if (subElement.tag == Comment::beg && !verbose)
                 continue;
+
+            lineBetween |= subElement.tag == Markup::pass;
 
             if (lineAfter || lineBetween && it->lineBeforeSubElement)
                 stream << "\n\n";

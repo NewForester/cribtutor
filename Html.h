@@ -56,6 +56,7 @@ namespace       Html
         static string  para ("<p>");
         static string  term ("<em>");
         static string  asis ("<pre>");
+        static string  pass ("<div>");
         static string  code ("<code>");
         static string  span ("<span>");
         static string  ulst ("<ul>");
