@@ -5,20 +5,48 @@ One of a set of help files for the
     Released under the terms of the GNU GPL v2
 -->
 
-<h1> For notes on how to write crib sheets using Markdown syntax return </h1>
+<h1> For notes on how to write crib-sheets using Markdown syntax press return </h1>
 
 <p>
-Html describes how to render a web-page.  It is not a very convenient format for writing web-page contents.
-Wikis provide mark-up languages geared toward writing content and translate the mark-up into html for rendering.
+HTML describes how to render a web-page.  It is not a very convenient format for writing web-page contents.
+Wikis provide mark-up languages geared toward writing content and translate the mark-up into HTML for rendering.
 </p>
 <p>
-One such language is Markdown.
-This is used, for example, on GitHub.
-There are several translators that will convert text with Markdown mark-up into html.
+One such language is Markdown, used, for example, on GitHub.
+There are several translators that will convert text with Markdown mark-up into HTML.
+One such translator is `pandoc`:
+<pre>
+    pandoc example.md > example.html
+</pre>
 </p>
 <p>
-Writing crib sheets using a wiki mark-up and using a translator can avoid a lot of tedious editing time.
-With Markdown there a couple of small snags.
+Writing crib-sheets using a wiki mark-up and using a translator can avoid a lot of tedious editing time:
+<ol>
+<li>- seldom any need to add HTML tags by hand;</li>
+<li>- seldom any need to escape characters in code samples;</li>
+<li>- source remains readable and convenient to change.</li>
+</ol>
+</p>
+
+<p>
+Terms that may be blanked by cribtutor should be marked with &apos;_&apos; or &apos;*&apos;.
+Using &apos;*&apos; in preference to &apos;_&apos; may confuse your spell checker less often.
+</p>
+
+<p>
+Markdown requires a blank line between paragraphs.
+As a consequence, a blank line needs to appear either side of code blocks, lists and
+also (should you need to use them) HTML block elements.
+A blank line is needed:  an HTML comment will not suffice nor will back ticks.
+<pre>
+    Here is an example:
+
+    ```html
+        &lt;p&gt;A tad tedious but less so that raw HTML&lt;/p&gt;
+    ```
+
+    Note how a blank line is required either side of a code block.
+</pre>
 </p>
 
 
@@ -26,13 +54,12 @@ With Markdown there a couple of small snags.
 
 <p>
 Cribtutor considers a list to be part of a question.
-This means the program expects each html list element to be a sub element of a paragraph element.
+This means the program expects each HTML list element to be a sub element of a paragraph element.
 The same is true of pre-formatted text such as code blocks.
 </p>
 <p>
-This is not what Markdown translators generate.
-List elements and pre-formatted text are block elements equal to paragraphs.
-This is, in part, because Markdown supports list items that comprise one or more paragraphs etc.
+This is not what Markdown translators generate:
+list elements and pre-formatted text are block elements equal to paragraphs.
 </p>
 <p>
 The cribtutor program compensates but sometimes you may not want this.
@@ -40,18 +67,18 @@ To illustrate, consider:
 <pre>
     The cardinal points are:
 
-      * _north_,
-      * _south_,
-      * _east_ and
-      * _west_
+      + *north*,
+      + *south*,
+      + *east* and
+      + *west*
 
     but home is best.
 </pre>
 The blank lines either side of the list are required otherwise Markdown and translators do not recognise the list as a list.
-The translators generate a list that is not within a paragraph, so cribtutor, without compensation, would simply ignore the list.
+The translators generate a list that is not within a paragraph, which, without compensation, cribtutor would simply ignore.
 </p>
 <p>
-The program compensates by:
+The program compensates by (internally):
 <ol>
 <li>- inserting a new paragraph and making the list a sub-element;</li>
 <li>- if the element following the list is a paragraph, merging the two paragraphs;</li>
@@ -62,7 +89,7 @@ The program compensates by:
 The effect is to treat the example above as one paragraph and thus one quiz question.
 </p>
 <p>
-Whenever you do not want the following/preceding paragraph to be merged, begin/end it with a comment.
+Whenever you do not want the following/preceding paragraph to be merged, begin/end it with a comment:
 <pre>
     &lt;!-- --&gt;
 </pre>
@@ -71,27 +98,28 @@ will do nicely.
 <p>
 For example, the following will be considered three separate paragraphs:
 <pre>
-    The cardinal points are.
+    There are *four* cardinal points.
     &lt;!-- --&gt;
 
-      * _north_,
-      * _south_,
-      * _east_ and
-      * _west_
+      + *north*,
+      + *south*,
+      + *east* and
+      + *west*
 
     &lt;!-- --&gt;
-    But home is best.
+    But, whatever or which ever, home is *best*.
 </pre>
 </p>
 <p>
-The compensation and use of comments to prevent it applies to unordered (bullet) lists, ordered (numbered) lists and pre-formatted text (code blocks).
+The compensation, and the use of comments to prevent it, applies to unordered (bullet) lists, ordered (numbered) lists and pre-formatted text (code blocks).
 </p>
+
 
 
 <h2> Shuffling Lists </h2>
 
 <p>
-To use the list shuffling feature (already described) with Markdown, you should write an ordered list as:
+To use the list shuffling feature with Markdown, you should write an ordered list as:
 </p>
 
 <p>
@@ -111,11 +139,11 @@ Cribtutor knows this and compensates.
 <h2> Code Spans </h2>
 
 <p>
-Markdown syntax also supports code spans, which do occur within paragraphs:
+Markdown syntax also supports code spans, which occur within paragraphs:
 <pre>
     This is a `code span` within a sentence.
 </pre>
-translates to the html:
+translates to the HTML:
 <pre>
     This is a &lt;code&gt;code span&lt;/code&gt; within a sentence.
 </pre>
@@ -125,12 +153,14 @@ Cribtutor honours the original Markdown syntax and will render this as:
 </pre>
 </p>
 <p>
-Blankable terms may be enclosed in code spans thus:
+One of the advantages of code spans, as with code blocks, is that you do not need to escape characters
+that otherwise would be interpreted by HTML (such as &apos;&lt;&apos; and &apos;&amp;&apos;).
+However, it is not clear whether you can include Markdown syntax in code spans.
+The original Markdown specification does not say you cannot but GitHub and `pandoc` appear to ignore it.
+Regardless, cribtutor will recognise blankable terms within code spans.
 <pre>
     This is a `*blankable compound term*` within a code span.
 </pre>
-Some Markdown translators may ignore Markdown syntax within code spans.
-As far as blankable terms are concerned, cribtutor compensates.
 </p>
 
 
@@ -142,6 +172,6 @@ Cribtutor simply ignores these.
 </p>
 
 <p>
-GitHub Markdown accepts some WikiMedia syntax links.
+GitHub Markdown accepts some WikiMedia syntax for hyper-links.
 Markdown translators may ignore these as does cribtutor.
 </p>
