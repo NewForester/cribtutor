@@ -310,7 +310,7 @@ Terms::CompoundTerm  Terms::newTerm (string &contentMask, const string& term)
         else if (term[++epos] == '\0')
             break;
         else
-            contentMask += "–____";     // not portable ?
+            contentMask += "-____";
 
         bpos = term.find_first_not_of(" ", epos);
         if (bpos == string::npos) break;

@@ -7,7 +7,7 @@ I do not like this web interface. Odd, because while I generally dislike GUIs, I
 
 This is a paragraph that contain a list: + one + two + three but this is not interpreted as I would expect.
 
-I have tried converting such lists to html using ____–____ and ____.
+I have tried converting such lists to html using ____-____ and ____.
 Fill in 2 blanked terms:  >> pandoc, python markdown,;
 
 These worthy Mardown to html converters do not recognise the list without the blank lines.
