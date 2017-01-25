@@ -136,7 +136,7 @@ void    Quiz::run (SectionNumber& prefix, Html::Element& quiz, int choices)
                     ;
                 else if (prefix.doubleDigit())
                     cout << prefix.quiz(header) << endl << endl;
-                else if (Dialogue::skipYesNo(tomeHeader))
+                else if (Dialogue::skipYesNo("\n" + tomeHeader))
                     return;
             }
         }
