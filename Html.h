@@ -178,7 +178,7 @@ namespace       Html
 
 namespace       Html
 {
-    // a representation of part of an html element comprising a tag and a subelement
+    // a representation of part of an html element comprising text and a subelement
 
     struct      ElementPart
     {

@@ -76,6 +76,7 @@ namespace       Html
 
     static  void    tidyText (string& content, const string &tag, const bool startOfElement, const bool endOfElement);
     static  void    checkForPairedTerms (ElementPart& lhs, ElementPart& rhs);
+    static  size_t  itemTabStop (Element& subElement);
 
     // simple routines for annotateElement()
 
@@ -529,32 +530,13 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
                 //     term - description
                 // would it not be nice to line up the descriptions ?
 
-                // calculate the offset of the - required to do the nice thing
-
-                ElementContents::iterator   it = subElement.contents.begin();
-
-                size_t  itemTabStop = 0;
-
-                for (it = subElement.contents.begin(); it != subElement.contents.end(); ++it)
+                if (subElement.contents.size() == 1 && subElement.contents.front().subElement && subElement.contents.front().subElement->tag == Markup::para)
                 {
-                    if (!it->text.empty())
-                    {
-                        size_t  pos = it->text.find(" - ");
-
-                        if (pos == string::npos)
-                        {
-                            itemTabStop += it->text.length();
-                        }
-                        else
-                        {
-                            listTabStop = max (listTabStop, itemTabStop + pos);
-
-                            break;
-                        }
-                    }
-
-                    if (it->subElement && it->subElement->tag == Markup::term)
-                        itemTabStop += it->subElement->contents.front().text.length();
+                    listTabStop = max (listTabStop, itemTabStop (*subElement.contents.front().subElement));
+                }
+                else
+                {
+                    listTabStop = max (listTabStop, itemTabStop (subElement));
                 }
             }
         }
@@ -569,8 +551,22 @@ void    Html::annotateElement (Element& element, bool htmlBlockElement)
 
     if (element.tag == Markup::olst)
         for (it = element.contents.begin(); it != element.contents.end(); ++it)
-            if (it->subElement && it->subElement->tag == Markup::item)
-                it->subElement->padWidth = listTabStop;
+            if (it->subElement)
+            {
+                Element&    subElement = *it->subElement;
+
+                if (subElement.tag == Markup::item)
+                {
+                    if (subElement.contents.size() == 1 && subElement.contents.front().subElement && subElement.contents.front().subElement->tag == Markup::para)
+                    {
+                        subElement.contents.front().subElement->padWidth = listTabStop;
+                    }
+                    else
+                    {
+                        subElement.padWidth = listTabStop;
+                    }
+                }
+            }
 }
 
 //----------------------------------------------------------------------------//
@@ -672,6 +668,39 @@ void    Html::checkForPairedTerms (ElementPart& lhs, ElementPart& rhs)
             if (len > 0 && lhs.text.substr(len) == extra)
                 lhs.subElement->strictOrder = rhs.subElement->strictOrder = false;
         }
+}
+
+// calculate the offset of any - (so list items can be lined up)
+
+size_t  Html::itemTabStop (Element& element)
+{
+    size_t  tabStop = 0;
+
+    ElementContents::iterator   it;
+
+    for (it = element.contents.begin(); it != element.contents.end(); ++it)
+    {
+        if (!it->text.empty())
+        {
+            size_t  pos = it->text.find(" - ");
+
+            if (pos == string::npos)
+            {
+                tabStop += it->text.length();
+            }
+            else
+            {
+                return (tabStop += pos);
+            }
+        }
+
+        if (it->subElement && it->subElement->tag == Markup::term)
+        {
+            tabStop += it->subElement->contents.front().text.length();
+        }
+    }
+
+    return (0);
 }
 
 //----------------------------------------------------------------------------//
