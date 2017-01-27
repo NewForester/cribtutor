@@ -21,7 +21,7 @@
 //----------------------------------------------------------------------------//
 //
 // https://github.com/NewForester/cribtutor
-// Copyright (C) 2016, NewForester
+// Copyright (C) 2016, 2017 NewForester
 // Released under the terms of the GNU GPL v2
 //
 //----------------------------------------------------------------------------//
@@ -29,6 +29,7 @@
 #include "Html.h"
 #include "Quiz.h"
 #include "SectionNumber.h"
+#include "cribtutor.h"
 
 #include <fstream>
 #include <iostream>
@@ -37,6 +38,12 @@
 #include <cstdlib>
 
 using namespace std;
+
+//----  program constants
+
+const string    version     = VERSION;
+const string    copyright   = COPYRIGHT;
+const string    licence     = LICENCE;
 
 //----  program parameters
 
@@ -263,6 +270,17 @@ void    processArguments (int argc, char* argv[])
             nn = 1;
 
             continue;
+        }
+
+        // version options
+
+        if (arg == "-v" || arg == "--version")
+        {
+            cout << "cribtutor " << version << endl;
+            cout << "Copyright (C) " << copyright << ", NewForester" << endl;
+            cout << "Released under the terms of the " << licence << endl;
+
+            exit (0);
         }
 
         if (ii != 0)

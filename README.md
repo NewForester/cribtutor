@@ -6,7 +6,7 @@ A simple program to run fill-in-the-blank quizzes from sets of crib-sheets.
 The cribtutor program is pedagogic.
 
 It generates fill-in-the-blanks quizzes from crib-sheets.
-The crib-sheets are expressed in a subset of _html_
+The crib-sheets are expressed in a subset of *html*
 but the program has only a simple command line interface, not a web interface.
 
 ---
@@ -16,7 +16,7 @@ To build the program under Linux, enter:
     make
 
 in the directory in which the repository has been cloned.
-The result of the build is an executable named _cribtutor_.
+The result of the build is an executable named *cribtutor*.
 
 For more information on how to invoke the program, enter:
 
@@ -34,12 +34,12 @@ Help can be invoked with:
     ./cribtutor --help
 
 This allows the browsing several help topics:
-<ul>
-  <li>command line options</li>
-  <li>how to use the program</li>
-  <li>how to write crib sheets for the program</li>
-  <li>the basic ideas behind the program</li>
-</ul>
+
+  * command line options
+  * how to use the program
+  * how to write crib-sheets for the program
+  * how to use Markdown to write crib-sheets for the program
+  * the basic ideas behind the program
 
 ---
 
@@ -56,7 +56,7 @@ The comments attempt to explain &apos;what&apos; and &apos;why&apos;.
 
 ---
 
-There are a number of unit tests in the subdirectory _test/_.
+There are a number of unit tests in the subdirectory *test/*.
 They are almost certainly not as self-evident as had been hoped.
 
 Individual tests can be run from the command line with:
@@ -64,7 +64,7 @@ Individual tests can be run from the command line with:
     ./cribtutor -t <test> [-p]
 
 where &lt;test&gt; are the initial letters of the test file name.
-Tests whose names end in _-p_ should be run with the _-p_ flag,
+Tests whose names end in *-p* should be run with the *-p* flag,
 which simply prints, no questions asked.
 
 The tests are used for regression purposes:
@@ -85,7 +85,7 @@ The tests were written in the spirit of TDD but they do not use a unit test fram
 
 One principle of TDD is that each test case should be atomic.
 This would lead to many, many, trivial test, reference and input files.
-Here test files contain _html_ block elements each of which may be considered a test case.
+Here test files contain *html* block elements each of which may be considered a test case.
 
 Another consequence of an atomic test case approach is that it does no catch combinatorial bugs:
 if A pass, if B pass but if A and B then fail.
@@ -100,13 +100,19 @@ They do not, for example, test the command line option/flag logic.
 
 ---
 
+Release 1.0.0.  Program, help files and test files committed.
+Example crib-sheet committed.
+
 Copyright (C) 2016, NewForester, released under the terms of the GNU GPL v2.
 
 ---
 
-Program, help files and test files committed.
-Example crib sheet committed.
+Release 1.1.0 with support for html generated using *pandoc* from crib-sheets written using Markdown mark-up.
+
+Copyright (C) 2017, NewForester, released under the terms of the GNU GPL v2.
+
+---
 
 No longer under development although bug fixes are likely.
 
-    NewForester, November 2016
+NewForester, January 2017

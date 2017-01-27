@@ -2,7 +2,7 @@
 ##
 ## This is the makefile for the
 ##    https://github.com/NewForester/cribtutor project
-##    Copyright (C) 2016, NewForester
+##    Copyright (C) 2016, 2017 NewForester
 ##    Released under the terms of the GNU GPL v2
 ##
 ##----------------------------------------------------------------------------##
@@ -19,7 +19,7 @@ all:	cribtutor
 
 OBJS=cribtutor.o Dialogue.o Html.o Massage.o Quiz.o SectionNumber.o Terms.o
 
-cribtutor.o:		Quiz.h SectionNumber.h Html.h
+cribtutor.o:		Quiz.h SectionNumber.h Html.h cribtutor.h
 Quiz.o:			Quiz.h SectionNumber.h Dialogue.h Html.h
 Dialogue.o:		Dialogue.h Terms.h Quiz.h Html.h
 SectionNumber.o:	SectionNumber.h
